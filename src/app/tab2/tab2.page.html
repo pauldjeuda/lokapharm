@@ -1,0 +1,57 @@
+<ion-header class="ion-no-border glass-header">
+  <ion-toolbar>
+    <ion-title>Itinéraire</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="route-content">
+  <div *ngIf="!selectedPharmacy" class="empty-state">
+    <img src="assets/icon/lokaphar-logo.png" alt="Lokaphar" class="app-logo app-logo--md" />
+    <h2>Aucun itinéraire</h2>
+    <p>Sélectionnez une pharmacie dans l'onglet Explorer pour voir le trajet.</p>
+  </div>
+
+  <div *ngIf="selectedPharmacy" class="route-card">
+    <div class="route-header">
+      <div class="route-icon">
+        <ion-icon name="medical"></ion-icon>
+      </div>
+      <div>
+        <h2>{{ selectedPharmacy.name }}</h2>
+        <p>{{ selectedPharmacy.address || selectedPharmacy.district || selectedPharmacy.city }}</p>
+      </div>
+    </div>
+
+    <div class="route-stats">
+      <div class="stat-card">
+        <span class="label">{{ isNavigating ? 'Distance restante' : 'Distance' }}</span>
+        <strong>{{ (isNavigating ? remainingDistance : currentRoute?.distanceMeters) | distance }}</strong>
+      </div>
+      <div class="stat-card">
+        <span class="label">{{ isNavigating ? 'Temps restant' : 'Durée estimée' }}</span>
+        <strong>{{ (isNavigating ? remainingDuration : currentRoute?.durationSeconds) | duration }}</strong>
+      </div>
+    </div>
+
+    <ion-button
+      *ngIf="!isNavigating"
+      expand="block"
+      class="directions-btn"
+      [disabled]="loading || !currentRoute"
+      (click)="startNavigation()"
+    >
+      <ion-icon slot="start" name="navigate"></ion-icon>
+      Démarrer la navigation
+    </ion-button>
+
+    <ion-button
+      *ngIf="isNavigating"
+      expand="block"
+      fill="outline"
+      color="danger"
+      (click)="stopNavigation()"
+    >
+      Arrêter la navigation
+    </ion-button>
+  </div>
+</ion-content>

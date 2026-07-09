@@ -1,0 +1,148 @@
+<ion-header class="ion-no-border glass-header">
+  <ion-toolbar>
+    <ion-title>À propos</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="activeSection">
+      <ion-segment-button value="about">
+        <ion-label>App</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="privacy">
+        <ion-label>Confidentialité</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="terms">
+        <ion-label>Conditions</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="about-content">
+  <section *ngIf="activeSection === 'about'" class="legal-section">
+    <div class="about-hero">
+      <img src="assets/icon/lokaphar-logo.png" alt="Lokaphar" class="app-logo app-logo--lg" />
+      <h1>Lokaphar</h1>
+      <p class="version">Version {{ appVersion }}</p>
+      <p class="tagline">Trouvez les pharmacies au Cameroun</p>
+    </div>
+
+    <ion-card class="glass-card">
+      <ion-card-header>
+        <ion-card-title>Avertissement santé</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        Lokaphar est un outil d'information et de localisation. Il ne remplace pas un avis médical,
+        une consultation ou une urgence sanitaire. En cas d'urgence, contactez les services de secours
+        ou rendez-vous à l'établissement de santé le plus proche.
+      </ion-card-content>
+    </ion-card>
+
+    <ion-list lines="none" class="links-list">
+      <ion-item button (click)="setSection('privacy')">
+        <ion-icon name="shield-checkmark-outline" slot="start"></ion-icon>
+        <ion-label>Politique de confidentialité</ion-label>
+      </ion-item>
+      <ion-item button (click)="setSection('terms')">
+        <ion-icon name="document-text-outline" slot="start"></ion-icon>
+        <ion-label>Conditions d'utilisation</ion-label>
+      </ion-item>
+      <ion-item button (click)="openExternalUrl(privacyPolicyUrl)">
+        <ion-icon name="open-outline" slot="start"></ion-icon>
+        <ion-label>Version en ligne (confidentialité)</ion-label>
+      </ion-item>
+      <ion-item button (click)="openSupportEmail()">
+        <ion-icon name="mail-outline" slot="start"></ion-icon>
+        <ion-label>{{ supportEmail }}</ion-label>
+      </ion-item>
+      <ion-item button (click)="openExternalUrl(websiteUrl)">
+        <ion-icon name="globe-outline" slot="start"></ion-icon>
+        <ion-label>{{ websiteUrl }}</ion-label>
+      </ion-item>
+    </ion-list>
+
+    <div class="credits">
+      <h3>Sources de données</h3>
+      <p>Catalogue MINSANTE/DPML, OpenStreetMap, OSRM, Nominatim.</p>
+      <h3>Licences open source</h3>
+      <p>Leaflet, Ionic, Angular, Capacitor — licences open source applicables.</p>
+    </div>
+  </section>
+
+  <section *ngIf="activeSection === 'privacy'" class="legal-section legal-text">
+    <h2>Politique de confidentialité</h2>
+    <p><strong>Dernière mise à jour :</strong> juillet 2026</p>
+
+    <h3>1. Responsable du traitement</h3>
+    <p>
+      Lokaphar (cm.lokaphar.app) — contact :
+      <a [href]="'mailto:' + supportEmail">{{ supportEmail }}</a>
+    </p>
+
+    <h3>2. Données collectées</h3>
+    <ul>
+      <li><strong>Localisation</strong> : coordonnées GPS lorsque vous autorisez l'accès, pour afficher les pharmacies proches et calculer des itinéraires.</li>
+      <li><strong>Favoris</strong> : liste des pharmacies enregistrées localement sur votre appareil.</li>
+      <li><strong>Cache</strong> : données de pharmacies mises en cache localement pour améliorer les performances.</li>
+    </ul>
+    <p>Nous ne collectons pas de compte utilisateur, d'identité, ni de données de paiement.</p>
+
+    <h3>3. Finalités</h3>
+    <p>Les données sont utilisées uniquement pour fournir les fonctionnalités de l'application : carte, recherche, itinéraires et favoris.</p>
+
+    <h3>4. Partage avec des tiers</h3>
+    <p>Lors de l'utilisation de la carte et des itinéraires, vos coordonnées peuvent être transmises aux services suivants :</p>
+    <ul>
+      <li>OpenStreetMap / Overpass API (recherche de pharmacies)</li>
+      <li>Nominatim (géocodage inverse)</li>
+      <li>OSRM (calcul d'itinéraires)</li>
+      <li>Fournisseurs de tuiles cartographiques (OpenStreetMap, Carto, etc.)</li>
+    </ul>
+    <p>Ces services sont soumis à leurs propres politiques de confidentialité.</p>
+
+    <h3>5. Stockage et durée</h3>
+    <p>Les favoris et le cache sont stockés sur votre appareil. Vous pouvez les supprimer en désinstallant l'application ou en effaçant les données de l'app.</p>
+
+    <h3>6. Vos droits</h3>
+    <p>
+      Vous pouvez refuser l'accès à la localisation à tout moment dans les paramètres de votre appareil.
+      Pour toute question : <a [href]="'mailto:' + supportEmail">{{ supportEmail }}</a>
+    </p>
+
+    <h3>7. Sécurité</h3>
+    <p>Les communications réseau utilisent HTTPS. Aucun jeton d'authentification n'est stocké dans le navigateur ou l'application.</p>
+
+    <ion-button expand="block" fill="outline" (click)="openExternalUrl(privacyPolicyUrl)">
+      Ouvrir la version en ligne
+    </ion-button>
+  </section>
+
+  <section *ngIf="activeSection === 'terms'" class="legal-section legal-text">
+    <h2>Conditions d'utilisation</h2>
+    <p><strong>Dernière mise à jour :</strong> juillet 2026</p>
+
+    <h3>1. Objet</h3>
+    <p>
+      Lokaphar permet de localiser des pharmacies au Cameroun et d'obtenir des itinéraires.
+      L'application est fournie « en l'état », sans garantie d'exactitude des horaires, adresses ou disponibilités.
+    </p>
+
+    <h3>2. Usage autorisé</h3>
+    <p>Vous vous engagez à utiliser l'application de manière licite et à ne pas surcharger les API tierces (notamment Nominatim et Overpass).</p>
+
+    <h3>3. Limitation de responsabilité</h3>
+    <p>
+      Les informations affichées proviennent de sources publiques (MINSANTE, OpenStreetMap) et peuvent être incomplètes ou obsolètes.
+      Lokaphar ne saurait être tenu responsable d'une décision prise sur la base de ces informations.
+    </p>
+
+    <h3>4. Propriété intellectuelle</h3>
+    <p>La marque Lokaphar, le logo et l'interface sont protégés. Les données cartographiques appartiennent à leurs auteurs respectifs (© OpenStreetMap contributors).</p>
+
+    <h3>5. Modifications</h3>
+    <p>Nous pouvons mettre à jour ces conditions. La version en vigueur est accessible dans l'application.</p>
+
+    <ion-button expand="block" fill="outline" (click)="openExternalUrl(termsUrl)">
+      Ouvrir la version en ligne
+    </ion-button>
+  </section>
+</ion-content>

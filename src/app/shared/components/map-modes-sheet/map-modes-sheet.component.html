@@ -1,0 +1,62 @@
+<ion-modal
+  [isOpen]="isOpen"
+  [initialBreakpoint]="0.42"
+  [breakpoints]="[0.35, 0.42, 0.55]"
+  (didDismiss)="close()"
+  class="map-modes-modal"
+>
+  <ng-template>
+    <ion-content class="map-modes-content">
+      <div class="sheet-header">
+        <h2>Modes carte</h2>
+        <button class="close-btn" type="button" (click)="close()">
+          <ion-icon name="close"></ion-icon>
+        </button>
+      </div>
+
+      <div class="modes-grid">
+        <button
+          *ngFor="let mode of modes"
+          type="button"
+          class="mode-card"
+          [class.selected]="isSelected(mode.id)"
+          (click)="selectMode(mode.id)"
+        >
+          <div class="mode-preview" [ngClass]="mode.previewClass">
+            <span class="mode-preview-accent"></span>
+          </div>
+          <span class="mode-label">{{ mode.label }}</span>
+        </button>
+      </div>
+
+      <div class="toggle-list">
+        <div class="toggle-item">
+          <div>
+            <span class="toggle-title">Trafic</span>
+            <span class="toggle-subtitle">Routes et ralentissements</span>
+          </div>
+          <ion-toggle
+            [checked]="settings.traffic"
+            (ionChange)="onTrafficToggle($event)"
+            mode="ios"
+          ></ion-toggle>
+        </div>
+
+        <div class="toggle-item">
+          <div>
+            <span class="toggle-title">Libellés</span>
+            <span class="toggle-subtitle">Noms des rues et quartiers</span>
+          </div>
+          <ion-toggle
+            [checked]="settings.labels"
+            [disabled]="settings.mode !== 'satellite'"
+            (ionChange)="onLabelsToggle($event)"
+            mode="ios"
+          ></ion-toggle>
+        </div>
+      </div>
+
+      <p class="map-attribution">© OpenStreetMap, CARTO, Esri et autres fournisseurs</p>
+    </ion-content>
+  </ng-template>
+</ion-modal>

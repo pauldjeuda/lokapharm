@@ -1,0 +1,20 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Accès à la localisation</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="permission-rationale-content">
+  <p>
+    Lokaphar utilise votre position pour afficher les pharmacies à proximité, calculer les
+    itinéraires et la navigation. Vos coordonnées peuvent être transmises aux services de
+    cartographie (OpenStreetMap, OSRM) uniquement pour ces fonctionnalités.
+  </p>
+
+  <div class="permission-rationale-actions">
+    <ion-button expand="block" fill="outline" color="medium" (click)="decline()">
+      Refuser
+    </ion-button>
+    <ion-button expand="block" (click)="accept()">Autoriser</ion-button>
+  </div>
+</ion-content>

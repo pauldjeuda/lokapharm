@@ -1,0 +1,148 @@
+<div *ngIf="pharmacy" class="pharmacy-detail">
+  <div class="detail-topbar">
+    <button class="icon-btn" type="button" (click)="onBack()">
+      <ion-icon name="arrow-back"></ion-icon>
+    </button>
+    <button class="icon-btn" type="button" (click)="onFavoriteToggle()">
+      <ion-icon [name]="isFavorite ? 'star' : 'star-outline'"></ion-icon>
+    </button>
+  </div>
+
+  <div class="photo-carousel">
+    <img
+      [src]="photos[0] | pharmacyPhoto"
+      [alt]="pharmacy.name"
+      class="hero-photo"
+      loading="lazy"
+    />
+    <div class="photo-dots" *ngIf="photos.length > 1">
+      <button
+        *ngFor="let photo of photos; let i = index"
+        type="button"
+        class="photo-dot"
+        [class.active]="i === activePhotoIndex"
+        (click)="selectPhoto(i)"
+      ></button>
+    </div>
+  </div>
+
+  <div class="detail-content">
+    <div class="detail-header">
+      <div class="header-badges">
+        <div class="category-pill">
+          <ion-icon name="medical"></ion-icon>
+          <span>Pharmacie</span>
+        </div>
+        <span class="source-pill">{{ dataSourceLabel }}</span>
+      </div>
+      <h2>{{ pharmacy.name }}</h2>
+      <p class="district-line">{{ locationLine }}</p>
+      <div class="status-row">
+        <span class="status-badge" [ngClass]="openStatusClass">{{ openStatusLabel }}</span>
+        <span *ngIf="pharmacy.distanceMeters" class="distance-chip">
+          {{ pharmacy.distanceMeters | distance }}
+        </span>
+        <span *ngIf="pharmacy.durationSeconds" class="distance-chip">
+          {{ pharmacy.durationSeconds | duration }}
+        </span>
+      </div>
+    </div>
+
+    <div class="action-row">
+      <button class="action-btn primary" type="button" [disabled]="routeLoading" (click)="onStartNavigation()">
+        <ion-icon name="navigate"></ion-icon>
+        <span>{{ routeLoading ? 'Calcul...' : 'Y aller' }}</span>
+      </button>
+      <button class="action-btn" type="button" [disabled]="!pharmacy.phone" (click)="onCall()">
+        <ion-icon name="call"></ion-icon>
+        <span>Appeler</span>
+      </button>
+      <button class="action-btn" type="button" [disabled]="!pharmacy.website" (click)="onOpenWebsite()">
+        <ion-icon name="globe-outline"></ion-icon>
+        <span>Site web</span>
+      </button>
+    </div>
+
+    <div class="info-section">
+      <div class="info-item">
+        <ion-icon name="map-outline"></ion-icon>
+        <div>
+          <span class="info-label">Quartier</span>
+          <p [class.pending]="loading && !pharmacy.district">{{ quarterLabel }}</p>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <ion-icon name="business-outline"></ion-icon>
+        <div>
+          <span class="info-label">Ville</span>
+          <p [class.pending]="loading && !pharmacy.city">{{ cityLabel }}</p>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <ion-icon name="location-outline"></ion-icon>
+        <div>
+          <span class="info-label">Adresse</span>
+          <p [class.pending]="loading && !fullAddress">{{ fullAddress || 'Identification en cours...' }}</p>
+          <p *ngIf="showCoordinatesHint" class="coords-hint">Position identifiée par GPS : {{ coordinatesLabel }}</p>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <ion-icon name="time-outline"></ion-icon>
+        <div>
+          <span class="info-label">Horaires</span>
+          <p>{{ openingHoursLabel }}</p>
+        </div>
+      </div>
+
+      <div class="info-item" *ngIf="pharmacy.phone">
+        <ion-icon name="call-outline"></ion-icon>
+        <div>
+          <span class="info-label">Téléphone</span>
+          <p>{{ pharmacy.phone }}</p>
+        </div>
+      </div>
+
+      <div class="info-item" *ngIf="pharmacy.operator">
+        <ion-icon name="storefront-outline"></ion-icon>
+        <div>
+          <span class="info-label">Exploitant</span>
+          <p>{{ pharmacy.operator }}</p>
+        </div>
+      </div>
+
+      <div class="info-item" *ngIf="pharmacy.wheelchair">
+        <ion-icon name="accessibility-outline"></ion-icon>
+        <div>
+          <span class="info-label">Accessibilité</span>
+          <p>{{ pharmacy.wheelchair === 'yes' ? 'Accessible fauteuil roulant' : pharmacy.wheelchair }}</p>
+        </div>
+      </div>
+
+      <div class="info-item" *ngIf="pharmacy.description">
+        <ion-icon name="information-circle-outline"></ion-icon>
+        <div>
+          <span class="info-label">À propos</span>
+          <p>{{ pharmacy.description }}</p>
+        </div>
+      </div>
+    </div>
+
+    <ion-button
+      expand="block"
+      class="directions-btn"
+      [disabled]="routeLoading"
+      (click)="onStartNavigation()"
+    >
+      <ion-icon slot="start" name="navigate"></ion-icon>
+      {{ routeLoading ? 'Calcul du trajet...' : 'Démarrer la navigation' }}
+    </ion-button>
+  </div>
+
+  <div *ngIf="loading" class="detail-loading">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Identification du quartier et de l'adresse...</p>
+  </div>
+</div>

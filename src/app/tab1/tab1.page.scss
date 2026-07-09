@@ -1,0 +1,553 @@
+@use '../../theme/glass' as glass;
+
+.explore-content {
+  --background: transparent;
+}
+
+.map-container {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  transition: filter 0.6s var(--ease-fluid);
+
+  .navigating & {
+    filter: saturate(1.1);
+  }
+}
+
+.map-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 500;
+  pointer-events: none;
+  transition: opacity 0.4s var(--ease-fluid);
+
+  &.navigating {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+.search-panel {
+  padding: calc(env(safe-area-inset-top) + 12px) 16px 0;
+  pointer-events: auto;
+  animation: glass-fade-in 0.6s var(--ease-fluid) 0.1s both;
+}
+
+.floating-search {
+  --background: var(--glass-bg-strong);
+  --border-radius: 28px;
+  --box-shadow: var(--glass-shadow);
+  --icon-color: #1a73e8;
+  --placeholder-color: rgba(60, 64, 67, 0.75);
+  --color: #1a1a2e;
+  padding: 0;
+  backdrop-filter: var(--glass-blur) saturate(160%);
+  -webkit-backdrop-filter: var(--glass-blur) saturate(160%);
+  border: 1px solid var(--glass-border);
+  transition: all 0.4s var(--ease-fluid);
+
+  &:focus-within {
+    --box-shadow: 0 12px 40px rgba(26, 115, 232, 0.18);
+    border-color: rgba(26, 115, 232, 0.35);
+    transform: translateY(-1px);
+  }
+}
+
+.filter-chips {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 14px 0 0;
+  scrollbar-width: none;
+  animation: glass-fade-in 0.6s var(--ease-fluid) 0.2s both;
+}
+
+.filter-chips::-webkit-scrollbar {
+  display: none;
+}
+
+ion-chip {
+  --background: var(--glass-bg);
+  --color: #1a1a2e;
+  margin: 0;
+  border: 1px solid var(--glass-border-subtle);
+  box-shadow: 0 4px 16px rgba(31, 38, 135, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  pointer-events: auto;
+  font-weight: 500;
+  transition: all 0.35s var(--ease-spring);
+
+  &:active {
+    transform: scale(0.94);
+  }
+}
+
+ion-chip.active {
+  --background: rgba(26, 115, 232, 0.85);
+  --color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 6px 24px rgba(26, 115, 232, 0.35);
+  transform: scale(1.02);
+}
+
+.fab-stack {
+  position: absolute;
+  right: 16px;
+  bottom: calc(30vh + 16px);
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: glass-scale-in 0.5s var(--ease-spring) 0.3s both;
+}
+
+.map-fab {
+  --background: var(--glass-bg-strong);
+  --color: #1a73e8;
+  --box-shadow: var(--glass-shadow);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  transition: all 0.35s var(--ease-spring);
+
+  &:hover {
+    --box-shadow: 0 12px 36px rgba(26, 115, 232, 0.25);
+  }
+}
+
+.pharmacy-sheet {
+  --border-radius: 28px 28px 0 0;
+  --box-shadow: 0 -8px 48px rgba(31, 38, 135, 0.15);
+}
+
+.sheet-content {
+  --background: var(--glass-bg-strong);
+  backdrop-filter: var(--glass-blur-strong) saturate(160%);
+  -webkit-backdrop-filter: var(--glass-blur-strong) saturate(160%);
+}
+
+.sheet-header {
+  padding: 8px 20px 0;
+}
+
+.sheet-handle {
+  width: 48px;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06);
+  margin: 0 auto 16px;
+}
+
+.sheet-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  gap: 12px;
+}
+
+.sheet-title-brand {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+}
+
+.sheet-title-row h2 {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  letter-spacing: -0.02em;
+}
+
+.sheet-title-row p {
+  margin: 4px 0 0;
+  color: rgba(60, 64, 67, 0.75);
+  font-size: 0.85rem;
+}
+
+.source-badge {
+  color: #1a73e8;
+  font-weight: 600;
+}
+
+.empty-pharmacies {
+  text-align: center;
+  padding: 32px 24px 48px;
+  color: rgba(60, 64, 67, 0.75);
+  animation: glass-fade-in 0.5s var(--ease-fluid) both;
+
+  ion-icon {
+    font-size: 3rem;
+    color: #1a73e8;
+    margin-bottom: 12px;
+  }
+
+  h3 {
+    margin: 0 0 8px;
+    color: #1a1a2e;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+}
+
+.selected-card {
+  margin: 0 16px 12px;
+  padding: 18px;
+  border-radius: 22px;
+  @include glass.glass-card;
+  animation: glass-scale-in 0.45s var(--ease-spring) both;
+}
+
+.selected-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.selected-card-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.selected-card-header p {
+  margin: 4px 0 0;
+  color: rgba(60, 64, 67, 0.75);
+  font-size: 0.85rem;
+}
+
+.back-btn,
+.favorite-btn {
+  background: var(--glass-bg-soft);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #1a73e8;
+  font-size: 1.2rem;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.3s var(--ease-spring);
+  border: 1px solid var(--glass-border-subtle);
+
+  &:active {
+    transform: scale(0.88);
+  }
+}
+
+.route-stats {
+  display: flex;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.stat {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #1a1a2e;
+  font-weight: 600;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: var(--glass-bg-soft);
+  border: 1px solid var(--glass-border-subtle);
+  backdrop-filter: blur(12px);
+  transition: all 0.3s var(--ease-fluid);
+
+  ion-icon {
+    color: #1a73e8;
+    font-size: 1.1rem;
+  }
+}
+
+.directions-btn {
+  --background: linear-gradient(135deg, #1a73e8 0%, #4285f4 100%);
+  --border-radius: 20px;
+  --box-shadow: 0 8px 28px rgba(26, 115, 232, 0.4);
+  margin-top: 4px;
+  height: 50px;
+  font-weight: 700;
+  transition: all 0.35s var(--ease-spring);
+
+  &:active {
+    transform: scale(0.97);
+    --box-shadow: 0 4px 16px rgba(26, 115, 232, 0.3);
+  }
+}
+
+.pharmacy-list {
+  background: transparent;
+  padding-bottom: 100px;
+}
+
+.pharmacy-item {
+  --background: var(--glass-bg-soft);
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --inner-padding-end: 0;
+  margin: 0 12px 8px;
+  border-radius: 18px;
+  border: 1px solid var(--glass-border-subtle);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.35s var(--ease-fluid);
+  animation: glass-fade-in 0.5s var(--ease-fluid) both;
+
+  @for $i from 1 through 12 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{0.05 * $i}s;
+    }
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.pharmacy-item.selected {
+  --background: rgba(26, 115, 232, 0.18);
+  border: 1px solid rgba(26, 115, 232, 0.25);
+  box-shadow: 0 4px 20px rgba(26, 115, 232, 0.12);
+}
+
+.pharmacy-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background: rgba(52, 168, 83, 0.15);
+  color: #34a853;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  border: 1px solid rgba(52, 168, 83, 0.2);
+  transition: all 0.3s var(--ease-spring);
+}
+
+.pharmacy-item h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.pharmacy-item p {
+  font-size: 0.82rem;
+  color: rgba(60, 64, 67, 0.7);
+}
+
+.distance-badge {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1a73e8;
+  white-space: nowrap;
+  padding: 6px 12px;
+  border-radius: 12px;
+  background: rgba(26, 115, 232, 0.1);
+  border: 1px solid rgba(26, 115, 232, 0.15);
+  transition: all 0.3s var(--ease-fluid);
+}
+
+.rank-badge {
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  background: rgba(26, 115, 232, 0.15);
+  color: #1a73e8;
+  font-size: 0.72rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(26, 115, 232, 0.2);
+}
+
+.pharmacy-start {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navigation-panel {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: calc(env(safe-area-inset-bottom) + 88px);
+  z-index: 700;
+  padding: 20px;
+  border-radius: 28px;
+  @include glass.glass-surface(24px, 0.92);
+  animation: glass-slide-up 0.55s var(--ease-fluid) both;
+}
+
+.navigation-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.stop-btn {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--glass-border-subtle);
+  border-radius: 14px;
+  background: var(--glass-bg-soft);
+  color: #5f6368;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s var(--ease-spring);
+
+  &:active {
+    transform: scale(0.9);
+    background: rgba(234, 67, 53, 0.15);
+    color: #ea4335;
+  }
+}
+
+.navigation-info h2 {
+  margin: 4px 0 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.navigation-label {
+  margin: 0;
+  font-size: 0.72rem;
+  color: #1a73e8;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.navigation-stats {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+  padding: 16px;
+  border-radius: 20px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border-subtle);
+}
+
+.navigation-stat {
+  flex: 1;
+  text-align: center;
+}
+
+.stat-value {
+  display: block;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #1a1a2e;
+  letter-spacing: -0.03em;
+  transition: all 0.4s var(--ease-fluid);
+}
+
+.stat-label {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.72rem;
+  color: rgba(60, 64, 67, 0.7);
+  font-weight: 500;
+}
+
+.navigation-divider {
+  width: 1px;
+  height: 48px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+}
+
+.map-overlay.navigating .search-panel,
+.map-overlay.navigating .fab-stack {
+  opacity: 0;
+  transform: translateY(-12px);
+  pointer-events: none;
+  transition: all 0.4s var(--ease-fluid);
+}
+
+:host ::ng-deep .pharmacy-marker {
+  background: transparent;
+  border: none;
+  transition: transform 0.3s var(--ease-spring);
+}
+
+:host ::ng-deep .marker-pin {
+  width: 16px;
+  height: 16px;
+  border-radius: 50% 50% 50% 0;
+  background: linear-gradient(135deg, #34a853, #4caf50);
+  border: 2.5px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 12px rgba(52, 168, 83, 0.4);
+  transform: rotate(-45deg);
+  margin: 10px auto;
+  transition: all 0.35s var(--ease-spring);
+}
+
+:host ::ng-deep .marker-pin.selected {
+  background: linear-gradient(135deg, #1a73e8, #4285f4);
+  width: 22px;
+  height: 22px;
+  box-shadow: 0 6px 20px rgba(26, 115, 232, 0.5);
+  animation: pulse-glow 2s infinite;
+}
+
+:host ::ng-deep .route-path {
+  transition:
+    opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+    stroke-width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: drop-shadow(0 2px 6px rgba(26, 115, 232, 0.18));
+}
+
+:host ::ng-deep .route-path-preview {
+  animation: route-preview-pulse 1.6s ease-in-out infinite;
+}
+
+:host ::ng-deep .route-path-main {
+  stroke: #4285f4;
+}
+
+:host ::ng-deep .route-path-enter {
+  opacity: 0;
+  stroke-width: 3;
+}
+
+:host ::ng-deep .route-path-fade-out {
+  opacity: 0 !important;
+}
+
+:host ::ng-deep .route-path-outline {
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.12));
+}
+
+:host ::ng-deep .route-path-traveled {
+  filter: none;
+}
+
+@keyframes route-preview-pulse {
+  0%,
+  100% {
+    opacity: 0.42;
+  }
+
+  50% {
+    opacity: 0.62;
+  }
+}

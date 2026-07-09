@@ -1,0 +1,88 @@
+.about-content {
+  --background: transparent;
+}
+
+.about-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.5rem 1rem 0.5rem;
+
+  h1 {
+    margin: 0.75rem 0 0.25rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  .version {
+    margin: 0;
+    opacity: 0.7;
+    font-size: 0.9rem;
+  }
+
+  .tagline {
+    margin: 0.25rem 0 0;
+    opacity: 0.85;
+  }
+}
+
+.legal-section {
+  padding: 0 1rem 2rem;
+}
+
+.glass-card {
+  margin: 1rem 0;
+}
+
+.links-list {
+  background: transparent;
+  margin-top: 0.5rem;
+
+  ion-item {
+    --background: transparent;
+    margin-bottom: 0.25rem;
+    border-radius: 12px;
+  }
+}
+
+.credits {
+  margin-top: 1.5rem;
+  opacity: 0.85;
+  font-size: 0.9rem;
+
+  h3 {
+    font-size: 0.95rem;
+    margin: 1rem 0 0.35rem;
+  }
+
+  p {
+    margin: 0 0 0.5rem;
+  }
+}
+
+.legal-text {
+  h2 {
+    font-size: 1.35rem;
+    margin: 0.5rem 0 1rem;
+  }
+
+  h3 {
+    font-size: 1rem;
+    margin: 1.25rem 0 0.5rem;
+  }
+
+  p,
+  li {
+    line-height: 1.55;
+    opacity: 0.9;
+  }
+
+  ul {
+    padding-left: 1.25rem;
+  }
+
+  ion-button {
+    margin-top: 1.5rem;
+  }
+}

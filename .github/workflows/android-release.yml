@@ -1,0 +1,132 @@
+name: Android Release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: android-release-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    env:
+      JAVA_VERSION: '17'
+      NODE_VERSION: '20'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build web app and sync Capacitor
+        run: npm run build:android
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: gradle
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Configure APK signing
+        id: signing
+        run: |
+          if [ -n "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" ]; then
+            echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > android/app/release.keystore
+            echo "mode=release" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=debug" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build signed release AAB (Play Store)
+        if: steps.signing.outputs.mode == 'release'
+        working-directory: android
+        run: chmod +x gradlew && ./gradlew bundleRelease assembleRelease --no-daemon
+        env:
+          ANDROID_KEYSTORE_FILE: release.keystore
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+
+      - name: Build debug APK (fallback without signing secrets)
+        if: steps.signing.outputs.mode == 'debug'
+        working-directory: android
+        run: chmod +x gradlew && ./gradlew assembleDebug --no-daemon
+
+      - name: Resolve release artifacts
+        id: artifacts
+        run: |
+          if [ "${{ steps.signing.outputs.mode }}" = "release" ]; then
+            echo "aab_path=android/app/build/outputs/bundle/release/app-release.aab" >> "$GITHUB_OUTPUT"
+            echo "aab_name=lokaphar-${{ github.run_number }}-release.aab" >> "$GITHUB_OUTPUT"
+            echo "apk_path=android/app/build/outputs/apk/release/app-release.apk" >> "$GITHUB_OUTPUT"
+            echo "apk_name=lokaphar-${{ github.run_number }}-release.apk" >> "$GITHUB_OUTPUT"
+            echo "files<<EOF" >> "$GITHUB_OUTPUT"
+            echo "lokaphar-${{ github.run_number }}-release.aab" >> "$GITHUB_OUTPUT"
+            echo "lokaphar-${{ github.run_number }}-release.apk" >> "$GITHUB_OUTPUT"
+            echo "EOF" >> "$GITHUB_OUTPUT"
+          else
+            echo "apk_path=android/app/build/outputs/apk/debug/app-debug.apk" >> "$GITHUB_OUTPUT"
+            echo "apk_name=lokaphar-${{ github.run_number }}-debug.apk" >> "$GITHUB_OUTPUT"
+            echo "files<<EOF" >> "$GITHUB_OUTPUT"
+            echo "lokaphar-${{ github.run_number }}-debug.apk" >> "$GITHUB_OUTPUT"
+            echo "EOF" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Read app version
+        id: version
+        run: |
+          VERSION_NAME=$(grep 'versionName' android/app/build.gradle | head -1 | sed 's/.*"\(.*\)".*/\1/')
+          VERSION_CODE=$(grep 'versionCode' android/app/build.gradle | head -1 | sed 's/[^0-9]//g')
+          echo "name=${VERSION_NAME}" >> "$GITHUB_OUTPUT"
+          echo "code=${VERSION_CODE}" >> "$GITHUB_OUTPUT"
+
+      - name: Prepare artifacts for release
+        run: |
+          if [ "${{ steps.signing.outputs.mode }}" = "release" ]; then
+            cp "${{ steps.artifacts.outputs.aab_path }}" "${{ steps.artifacts.outputs.aab_name }}"
+            cp "${{ steps.artifacts.outputs.apk_path }}" "${{ steps.artifacts.outputs.apk_name }}"
+          else
+            cp "${{ steps.artifacts.outputs.apk_path }}" "${{ steps.artifacts.outputs.apk_name }}"
+          fi
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.name }}-build.${{ github.run_number }}
+          name: Lokaphar v${{ steps.version.outputs.name }} (build ${{ github.run_number }})
+          prerelease: ${{ steps.signing.outputs.mode == 'debug' }}
+          generate_release_notes: true
+          body: |
+            ## Release Lokaphar
+
+            - Version : `${{ steps.version.outputs.name }}` (code `${{ steps.version.outputs.code }}`)
+            - Commit : `${{ github.sha }}`
+            - Type : `${{ steps.signing.outputs.mode }}`
+
+            **Play Store** : utilisez le fichier `.aab` pour la soumission.
+            **Installation directe** : utilisez le fichier `.apk`.
+
+            ${{ steps.signing.outputs.mode == 'debug' && '⚠️ Build debug : configurez les secrets `ANDROID_KEYSTORE_*` pour une release signée (AAB + APK).' || '' }}
+          files: ${{ steps.artifacts.outputs.files }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

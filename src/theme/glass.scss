@@ -1,0 +1,101 @@
+// Liquid Glass design tokens — opacité renforcée pour la lisibilité
+:root {
+  --glass-bg: rgba(255, 255, 255, 0.88);
+  --glass-bg-strong: rgba(255, 255, 255, 0.94);
+  --glass-bg-soft: rgba(255, 255, 255, 0.82);
+  --glass-border: rgba(255, 255, 255, 0.78);
+  --glass-border-subtle: rgba(255, 255, 255, 0.62);
+  --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.14);
+  --glass-shadow-lg: 0 16px 48px rgba(31, 38, 135, 0.2);
+  --glass-blur: blur(20px);
+  --glass-blur-strong: blur(24px);
+  --ease-fluid: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --transition-fast: 0.25s var(--ease-fluid);
+  --transition-medium: 0.4s var(--ease-fluid);
+  --transition-slow: 0.6s var(--ease-smooth);
+}
+
+@mixin glass-surface($blur: 20px, $opacity: 0.88) {
+  background: rgba(255, 255, 255, $opacity);
+  backdrop-filter: blur($blur) saturate(160%);
+  -webkit-backdrop-filter: blur($blur) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  box-shadow:
+    0 8px 32px rgba(31, 38, 135, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+@mixin glass-card {
+  @include glass-surface(18px, 0.9);
+  border-radius: 20px;
+  transition:
+    transform var(--transition-medium),
+    box-shadow var(--transition-medium),
+    background var(--transition-fast);
+}
+
+@mixin glass-pill {
+  @include glass-surface(16px, 0.86);
+  border-radius: 999px;
+}
+
+@mixin fluid-transition($props: all) {
+  transition: $props var(--transition-medium);
+}
+
+@keyframes glass-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes glass-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glass-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(26, 115, 232, 0.25); }
+  50% { box-shadow: 0 0 0 12px rgba(26, 115, 232, 0); }
+}
+
+.glass-animate-in {
+  animation: glass-fade-in 0.5s var(--ease-fluid) both;
+}
+
+.glass-slide-up {
+  animation: glass-slide-up 0.55s var(--ease-fluid) both;
+}
+
+.glass-scale-in {
+  animation: glass-scale-in 0.45s var(--ease-spring) both;
+}

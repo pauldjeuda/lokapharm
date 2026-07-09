@@ -1,0 +1,88 @@
+@use '../../theme/glass' as glass;
+
+.favorites-content {
+  --background: transparent;
+  background: linear-gradient(160deg, #fff8e1 0%, #f0f4ff 50%, #e6f4ea 100%);
+}
+
+.empty-state {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 32px;
+  color: rgba(60, 64, 67, 0.75);
+  animation: glass-fade-in 0.6s var(--ease-fluid) both;
+}
+
+.empty-state ion-icon {
+  font-size: 4.5rem;
+  color: #fbbc04;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 8px 24px rgba(251, 188, 4, 0.3));
+  animation: glass-scale-in 0.5s var(--ease-spring) 0.15s both;
+}
+
+.empty-state h2 {
+  margin: 0 0 8px;
+  color: #1a1a2e;
+  font-weight: 700;
+}
+
+.favorites-list {
+  background: transparent;
+  padding: 16px;
+}
+
+.favorite-item {
+  --background: transparent;
+  border-radius: 20px;
+  margin-bottom: 12px;
+  @include glass.glass-card;
+  animation: glass-fade-in 0.5s var(--ease-fluid) both;
+
+  @for $i from 1 through 10 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{0.06 * $i}s;
+    }
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.pharmacy-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: rgba(52, 168, 83, 0.15);
+  color: #34a853;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(52, 168, 83, 0.2);
+  transition: transform 0.3s var(--ease-spring);
+}
+
+.favorite-item h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.favorite-item p {
+  font-size: 0.82rem;
+  color: rgba(60, 64, 67, 0.7);
+}
+
+ion-button[fill='clear'] {
+  --color: #fbbc04;
+  transition: transform 0.3s var(--ease-spring);
+
+  &:active {
+    transform: scale(1.2);
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "lokaphar",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

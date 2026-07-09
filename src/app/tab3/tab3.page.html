@@ -1,0 +1,28 @@
+<ion-header class="ion-no-border glass-header">
+  <ion-toolbar>
+    <ion-title>Favoris</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="favorites-content">
+  <div *ngIf="!favorites.length" class="empty-state">
+    <img src="assets/icon/lokaphar-logo.png" alt="Lokaphar" class="app-logo app-logo--md" />
+    <h2>Aucun favori</h2>
+    <p>Ajoutez des pharmacies à vos favoris depuis l'onglet Explorer.</p>
+  </div>
+
+  <ion-list *ngIf="favorites.length" lines="none" class="favorites-list">
+    <ion-item *ngFor="let pharmacy of favorites" class="favorite-item">
+      <div class="pharmacy-icon" slot="start">
+        <ion-icon name="medical"></ion-icon>
+      </div>
+      <ion-label (click)="selectFavorite(pharmacy)">
+        <h3>{{ pharmacy.name }}</h3>
+        <p>{{ pharmacy.district || pharmacy.city || pharmacy.address }}</p>
+      </ion-label>
+      <ion-button fill="clear" slot="end" (click)="removeFavorite(pharmacy)">
+        <ion-icon name="star" color="warning"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
+</ion-content>

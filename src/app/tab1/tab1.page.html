@@ -1,0 +1,157 @@
+<ion-content [fullscreen]="true" class="explore-content">
+  <div #mapContainer class="map-container"></div>
+
+  <div class="map-overlay" [class.navigating]="isNavigating">
+    <div class="search-panel" *ngIf="!isNavigating">
+      <ion-searchbar
+        class="floating-search"
+        placeholder="Rechercher une pharmacie ou un quartier..."
+        [value]="searchQuery"
+        (ionInput)="onSearchChange($event)"
+        mode="ios"
+      ></ion-searchbar>
+
+      <div class="filter-chips">
+        <ion-chip
+          *ngFor="let filter of filters"
+          [class.active]="activeFilter === filter.id"
+          (click)="setFilter(filter.id)"
+        >
+          <ion-label>{{ filter.label }}</ion-label>
+        </ion-chip>
+      </div>
+    </div>
+
+    <div class="fab-stack" *ngIf="!isNavigating">
+      <ion-fab-button size="small" class="map-fab" (click)="openMapModes()">
+        <ion-icon name="layers"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button size="small" class="map-fab" (click)="recenterOnUser()">
+        <ion-icon name="locate"></ion-icon>
+      </ion-fab-button>
+    </div>
+  </div>
+
+  <div *ngIf="isNavigating" class="navigation-panel">
+    <div class="navigation-header">
+      <button class="stop-btn" type="button" (click)="stopNavigation()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+      <div class="navigation-info">
+        <p class="navigation-label">Navigation en cours</p>
+        <h2>{{ selectedPharmacy?.name }}</h2>
+      </div>
+    </div>
+
+    <div class="navigation-stats">
+      <div class="navigation-stat">
+        <span class="stat-value">{{ remainingDistance | distance }}</span>
+        <span class="stat-label">restant</span>
+      </div>
+      <div class="navigation-divider"></div>
+      <div class="navigation-stat">
+        <span class="stat-value">{{ remainingDuration | duration }}</span>
+        <span class="stat-label">arrivée estimée</span>
+      </div>
+    </div>
+
+    <ion-button expand="block" fill="outline" color="danger" (click)="stopNavigation()">
+      Arrêter la navigation
+    </ion-button>
+  </div>
+
+  <app-map-modes-sheet
+    [isOpen]="mapModesOpen"
+    [settings]="mapSettings"
+    (closed)="closeMapModes()"
+    (modeChange)="onMapModeChange($event)"
+    (trafficChange)="onTrafficToggle($event)"
+    (labelsChange)="onLabelsToggle($event)"
+  ></app-map-modes-sheet>
+
+  <ion-modal
+    [isOpen]="isSheetOpen && !isNavigating"
+    [initialBreakpoint]="pharmacyDetails ? 0.72 : 0.28"
+    [breakpoints]="pharmacyDetails ? [0.35, 0.55, 0.72, 0.92] : [0.18, 0.28, 0.55, 0.88]"
+    [backdropDismiss]="false"
+    [showBackdrop]="false"
+    handleBehavior="cycle"
+    class="pharmacy-sheet"
+  >
+    <ng-template>
+      <ion-content class="sheet-content">
+        <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
+          <ion-refresher-content></ion-refresher-content>
+        </ion-refresher>
+
+        <div class="sheet-header">
+          <div class="sheet-handle"></div>
+          <div class="sheet-title-row">
+            <div class="sheet-title-brand">
+              <img src="assets/icon/lokaphar-logo.png" alt="Lokaphar" class="app-logo app-logo--sm" />
+              <div>
+                <h2>Pharmacies à proximité</h2>
+                <p>
+                  {{ pharmacies.length }} trouvée(s) · triées par distance
+                  <span *ngIf="dataSource !== 'Aucune'" class="source-badge">
+                    · {{ dataSource }}{{ fromCache ? ' (cache)' : '' }}
+                  </span>
+                </p>
+              </div>
+            </div>
+            <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
+          </div>
+        </div>
+
+        <div *ngIf="loading && !pharmacies.length && !pharmacyDetails" class="loading-skeleton">
+          <ion-skeleton-text animated style="height: 72px; border-radius: 18px; margin: 0 16px 8px;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="height: 72px; border-radius: 18px; margin: 0 16px 8px;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="height: 72px; border-radius: 18px; margin: 0 16px 8px;"></ion-skeleton-text>
+        </div>
+
+        <div *ngIf="!loading && !pharmacies.length" class="empty-pharmacies">
+          <img src="assets/icon/lokaphar-logo.png" alt="Lokaphar" class="app-logo app-logo--md" />
+          <h3>Aucune pharmacie trouvée</h3>
+          <p>Les données combinent notre annuaire MINSANTE et OpenStreetMap. Vérifiez votre connexion ou élargissez la zone de recherche.</p>
+        </div>
+
+        <app-pharmacy-detail
+          *ngIf="pharmacyDetails"
+          [pharmacy]="pharmacyDetails"
+          [loading]="detailsLoading"
+          [routeLoading]="routeLoading"
+          [isFavorite]="isFavorite(pharmacyDetails)"
+          (back)="clearSelection()"
+          (favoriteToggle)="toggleFavorite(pharmacyDetails)"
+          (startNavigation)="startNavigation(pharmacyDetails)"
+          (call)="callPharmacy($event)"
+        ></app-pharmacy-detail>
+
+        <ion-list *ngIf="!pharmacyDetails" lines="none" class="pharmacy-list">
+          <ion-item
+            *ngFor="let pharmacy of pharmacies; trackBy: trackByPharmacyId; let index = index"
+            button
+            detail
+            class="pharmacy-item"
+            [class.selected]="selectedPharmacy?.id === pharmacy.id"
+            (click)="selectPharmacy(pharmacy)"
+          >
+            <div class="pharmacy-start" slot="start">
+              <div class="rank-badge">{{ index + 1 }}</div>
+              <div class="pharmacy-icon">
+                <ion-icon name="medical"></ion-icon>
+              </div>
+            </div>
+            <ion-label>
+              <h3>{{ pharmacy.name }}</h3>
+              <p>{{ pharmacy.district || pharmacy.city || pharmacy.address }}</p>
+            </ion-label>
+            <div slot="end" class="distance-badge">
+              {{ pharmacy.distanceMeters | distance }}
+            </div>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

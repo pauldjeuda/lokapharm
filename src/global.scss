@@ -1,0 +1,158 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+@use "theme/glass";
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+@import "leaflet/dist/leaflet.css";
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body,
+ion-app {
+  font-family: Inter, "SF Pro Display", Roboto, "Helvetica Neue", sans-serif;
+  background: linear-gradient(135deg, #e8f0fe 0%, #f0f4ff 40%, #e6f4ea 100%);
+  min-height: 100%;
+}
+
+ion-content {
+  --background: transparent;
+}
+
+ion-toolbar {
+  --background: transparent;
+  --border-width: 0;
+}
+
+ion-button {
+  --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: none;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+ion-item {
+  --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+ion-modal {
+  --backdrop-opacity: 0;
+}
+
+ion-modal::part(handle) {
+  background: rgba(255, 255, 255, 0.82);
+  width: 48px;
+  height: 5px;
+  border-radius: 999px;
+}
+
+ion-searchbar {
+  --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+ion-chip {
+  --transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+ion-fab-button {
+  --transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+ion-fab-button::part(native) {
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+ion-fab-button:active::part(native) {
+  transform: scale(0.92);
+}
+
+.glass-header ion-toolbar {
+  --background: var(--glass-bg-strong);
+  border-bottom: 1px solid var(--glass-border-subtle);
+  margin: 0 12px;
+  border-radius: 0 0 20px 20px;
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass-header ion-toolbar {
+    backdrop-filter: var(--glass-blur) saturate(160%);
+    -webkit-backdrop-filter: var(--glass-blur) saturate(160%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.glass-header ion-title {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #1a1a2e;
+}
+
+.app-logo {
+  display: block;
+  object-fit: contain;
+}
+
+.app-logo--sm {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.app-logo--md {
+  width: 88px;
+  height: 88px;
+  border-radius: 20px;
+  margin: 0 auto 16px;
+  box-shadow: 0 8px 24px rgba(26, 115, 232, 0.12);
+}
+
+.app-logo--lg {
+  width: 112px;
+  height: 112px;
+  border-radius: 24px;
+  box-shadow: 0 12px 32px rgba(26, 115, 232, 0.15);
+}
+
+/* Modal autorisation localisation */
+ion-modal.location-permission-modal {
+  --backdrop-opacity: 0.58;
+  --border-radius: 18px 18px 0 0;
+  --box-shadow: 0 -8px 32px rgba(31, 38, 135, 0.18);
+}
