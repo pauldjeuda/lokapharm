@@ -39,6 +39,18 @@
   animation: glass-slide-up 0.55s var(--ease-fluid) both;
 }
 
+.route-card::before {
+  content: '';
+  display: block;
+  height: 96px;
+  margin: -24px -24px 20px;
+  border-radius: 28px 28px 22px 22px;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(26, 115, 232, 0.18), transparent 35%),
+    radial-gradient(circle at 80% 20%, rgba(52, 168, 83, 0.14), transparent 28%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.52), rgba(255, 255, 255, 0.08));
+}
+
 .route-header {
   display: flex;
   gap: 16px;
@@ -59,6 +71,10 @@
   border: 1px solid rgba(52, 168, 83, 0.2);
   box-shadow: 0 4px 16px rgba(52, 168, 83, 0.12);
   transition: transform 0.35s var(--ease-spring);
+}
+
+.route-card:hover .route-icon {
+  transform: translateY(-2px) scale(1.03);
 }
 
 .route-header h2 {

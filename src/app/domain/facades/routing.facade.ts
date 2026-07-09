@@ -4,7 +4,7 @@ import { catchError, finalize, map, switchMap, tap } from 'rxjs/operators';
 import { GeoPoint } from '../../core/models/geo-point.model';
 import { RouteProfile, RouteResult } from '../../core/models/route.model';
 import { GeolocationService } from '../../core/services/geolocation.service';
-import { PharmacyService } from '../../services/pharmacy.service';
+import { OsrmApiService } from '../../data/api/osrm-api.service';
 import { buildPreviewRoute, buildRouteCacheKey } from '../utils/route.util';
 
 const ROUTE_CACHE_TTL_MS = 10 * 60 * 1000;
@@ -26,7 +26,7 @@ export class RoutingFacade {
   readonly profile$ = this.profileSubject.asObservable();
 
   constructor(
-    private readonly pharmacyService: PharmacyService,
+    private readonly osrmApi: OsrmApiService,
     private readonly geolocation: GeolocationService
   ) {}
 
@@ -48,8 +48,8 @@ export class RoutingFacade {
         const preview = buildPreviewRoute(origin, destination, selectedProfile);
         this.routeSubject.next(preview);
 
-        return this.pharmacyService
-          .getRoute(origin.lat, origin.lng, destination.lat, destination.lng)
+        return this.osrmApi
+          .getRoute(origin, destination, selectedProfile)
           .pipe(
             map(
               (route) =>

@@ -12,15 +12,21 @@
   </div>
 
   <ion-list *ngIf="favorites.length" lines="none" class="favorites-list">
-    <ion-item *ngFor="let pharmacy of favorites" class="favorite-item">
+    <ion-item
+      *ngFor="let pharmacy of favorites"
+      class="favorite-item"
+      button
+      detail="true"
+      (click)="selectFavorite(pharmacy)"
+    >
       <div class="pharmacy-icon" slot="start">
         <ion-icon name="medical"></ion-icon>
       </div>
-      <ion-label (click)="selectFavorite(pharmacy)">
+      <ion-label>
         <h3>{{ pharmacy.name }}</h3>
         <p>{{ pharmacy.district || pharmacy.city || pharmacy.address }}</p>
       </ion-label>
-      <ion-button fill="clear" slot="end" (click)="removeFavorite(pharmacy)">
+      <ion-button fill="clear" slot="end" aria-label="Retirer des favoris" (click)="removeFavorite(pharmacy); $event.stopPropagation()">
         <ion-icon name="star" color="warning"></ion-icon>
       </ion-button>
     </ion-item>

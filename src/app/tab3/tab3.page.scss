@@ -36,6 +36,17 @@
   padding: 16px;
 }
 
+.favorites-list::before {
+  content: 'Accès rapide';
+  display: block;
+  margin: 0 0 12px 4px;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(60, 64, 67, 0.62);
+}
+
 .favorite-item {
   --background: transparent;
   border-radius: 20px;
@@ -51,6 +62,11 @@
 
   &:active {
     transform: scale(0.98);
+  }
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 28px rgba(31, 38, 135, 0.1);
   }
 }
 

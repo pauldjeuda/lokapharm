@@ -6,7 +6,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { ViewWillEnter, ViewWillLeave } from '@ionic/angular';
+import { IonModal, ViewWillEnter, ViewWillLeave } from '@ionic/angular';
 import * as L from 'leaflet';
 import { combineLatest, Subscription } from 'rxjs';
 import { distinctUntilChanged, throttleTime } from 'rxjs/operators';
@@ -31,10 +31,19 @@ import { RoutingFacade } from '../domain/facades/routing.facade';
 })
 export class Tab1Page implements OnInit, AfterViewInit, OnDestroy, ViewWillEnter, ViewWillLeave {
   @ViewChild('mapContainer', { static: true }) mapContainer!: ElementRef<HTMLDivElement>;
+  @ViewChild('pharmacySheetModal') pharmacySheetModal?: IonModal;
+
+  readonly sheetBreakpoints = [0.18, 0.28, 0.38, 0.82];
+  readonly listBreakpoint = 0.38;
+  readonly detailBreakpoint = 0.28;
+  readonly collapseBreakpoint = 0.18;
 
   searchQuery = '';
   activeFilter: PharmacyFilter = 'nearby';
   isSheetOpen = true;
+  sheetInitialBreakpoint = 0.38;
+  currentSheetBreakpoint = 0.38;
+  fabBottomOffset = 'calc(42vh + 16px)';
   selectedPharmacy: Pharmacy | null = null;
   pharmacyDetails: PharmacyDetails | null = null;
   detailsLoading = false;
@@ -51,11 +60,19 @@ export class Tab1Page implements OnInit, AfterViewInit, OnDestroy, ViewWillEnter
   mapSettings: MapViewSettings = { mode: 'explore', traffic: false, labels: true };
   favoriteIds = new Set<string>();
 
-  readonly filters: Array<{ id: PharmacyFilter; label: string }> = [
-    { id: 'nearby', label: 'À proximité' },
-    { id: 'yaounde', label: 'Yaoundé' },
-    { id: 'douala', label: 'Douala' },
+  readonly filters: Array<{ id: PharmacyFilter; label: string; icon: string; hint: string }> = [
+    { id: 'nearby', label: 'À proximité', icon: 'locate', hint: 'Autour de vous' },
+    { id: 'yaounde', label: 'Yaoundé', icon: 'business', hint: 'Capitale' },
+    { id: 'douala', label: 'Douala', icon: 'boat', hint: 'Littoral' },
   ];
+
+  get isDetailView(): boolean {
+    return Boolean(this.selectedPharmacy);
+  }
+
+  get activePharmacy(): Pharmacy | null {
+    return this.pharmacyDetails ?? this.selectedPharmacy;
+  }
 
   private map?: L.Map;
   private userMarker?: L.CircleMarker;
@@ -300,6 +317,7 @@ export class Tab1Page implements OnInit, AfterViewInit, OnDestroy, ViewWillEnter
     this.pharmacyFacade.selectPharmacy(pharmacy);
     this.calculateRoute(pharmacy);
     this.pharmacyFacade.loadPharmacyDetails(pharmacy).subscribe();
+    void this.expandSheetTo(this.detailBreakpoint);
   }
 
   clearSelection(): void {
@@ -310,6 +328,20 @@ export class Tab1Page implements OnInit, AfterViewInit, OnDestroy, ViewWillEnter
     this.pharmacyFacade.selectPharmacy(null);
     this.routingFacade.clearRoute();
     this.clearRouteLayers();
+    void this.expandSheetTo(this.listBreakpoint);
+  }
+
+  onSheetBreakpointChange(event: CustomEvent<{ breakpoint: number }>): void {
+    const breakpoint = event.detail.breakpoint;
+    this.currentSheetBreakpoint = breakpoint;
+    this.updateFabOffset(breakpoint);
+
+    if (this.isDetailView && breakpoint <= this.collapseBreakpoint + 0.01) {
+      this.pharmacyFacade.selectPharmacy(null);
+      this.routingFacade.clearRoute();
+      this.clearRouteLayers();
+      void this.expandSheetTo(this.listBreakpoint);
+    }
   }
 
   callPharmacy(phone: string): void {
@@ -627,10 +659,13 @@ export class Tab1Page implements OnInit, AfterViewInit, OnDestroy, ViewWillEnter
 
     this.routeFrameFittedFor = pharmacyId;
     const bounds = L.latLngBounds(latLngs);
+    const sheetHeight = Math.max(this.currentSheetBreakpoint, this.detailBreakpoint);
+    const bottomPadding = Math.round(90 + sheetHeight * 220);
+    const topPadding = Math.round(96 + Math.max(0, (0.38 - sheetHeight) * 120));
 
     this.map.flyToBounds(bounds, {
-      paddingTopLeft: L.point(28, 110),
-      paddingBottomRight: L.point(28, 210),
+      paddingTopLeft: L.point(28, topPadding),
+      paddingBottomRight: L.point(28, bottomPadding),
       maxZoom: 16,
       duration: 0.85,
       easeLinearity: 0.22,
@@ -692,5 +727,22 @@ export class Tab1Page implements OnInit, AfterViewInit, OnDestroy, ViewWillEnter
 
     const bounds = L.latLngBounds(pharmacies.map((pharmacy) => [pharmacy.lat, pharmacy.lng]));
     this.map.fitBounds(bounds.pad(0.2));
+  }
+
+  private async expandSheetTo(breakpoint: number): Promise<void> {
+    this.currentSheetBreakpoint = breakpoint;
+    this.updateFabOffset(breakpoint);
+
+    const modal = this.pharmacySheetModal;
+    if (!modal) {
+      return;
+    }
+
+    await modal.setCurrentBreakpoint(breakpoint);
+  }
+
+  private updateFabOffset(breakpoint: number): void {
+    const sheetHeightVh = Math.round(breakpoint * 100);
+    this.fabBottomOffset = `calc(${sheetHeightVh}vh + 16px)`;
   }
 }

@@ -18,10 +18,7 @@ export class PharmacyDetailComponent {
   @Input() pharmacy: PharmacyDetails | null = null;
   @Input() loading = false;
   @Input() routeLoading = false;
-  @Input() isFavorite = false;
 
-  @Output() back = new EventEmitter<void>();
-  @Output() favoriteToggle = new EventEmitter<void>();
   @Output() startNavigation = new EventEmitter<void>();
   @Output() call = new EventEmitter<string>();
 
@@ -111,14 +108,6 @@ export class PharmacyDetailComponent {
 
   get photos(): string[] {
     return this.pharmacy?.photos ?? [];
-  }
-
-  onBack(): void {
-    this.back.emit();
-  }
-
-  onFavoriteToggle(): void {
-    this.favoriteToggle.emit();
   }
 
   onStartNavigation(): void {

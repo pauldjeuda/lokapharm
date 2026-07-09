@@ -57,6 +57,17 @@ ion-button {
   letter-spacing: 0.01em;
 }
 
+ion-button::part(native) {
+  transition:
+    transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+ion-button:active::part(native) {
+  transform: scale(0.98);
+}
+
 ion-item {
   --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -70,6 +81,10 @@ ion-modal::part(handle) {
   width: 48px;
   height: 5px;
   border-radius: 999px;
+}
+
+ion-modal::part(content) {
+  overflow: hidden;
 }
 
 ion-searchbar {
@@ -97,6 +112,10 @@ ion-fab-button:active::part(native) {
   border-bottom: 1px solid var(--glass-border-subtle);
   margin: 0 12px;
   border-radius: 0 0 20px 20px;
+}
+
+.glass-header ion-toolbar:first-child {
+  margin-top: env(safe-area-inset-top);
 }
 
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {

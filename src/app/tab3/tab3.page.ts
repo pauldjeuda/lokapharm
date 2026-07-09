@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Pharmacy } from '../core/models/pharmacy.model';
 import { PharmacyFacade } from '../domain/facades/pharmacy.facade';
@@ -13,7 +14,10 @@ export class Tab3Page implements OnInit, OnDestroy {
   favorites: Pharmacy[] = [];
   private subscription = new Subscription();
 
-  constructor(private readonly pharmacyFacade: PharmacyFacade) {}
+  constructor(
+    private readonly pharmacyFacade: PharmacyFacade,
+    private readonly router: Router
+  ) {}
 
   ngOnInit(): void {
     this.subscription.add(
@@ -33,5 +37,6 @@ export class Tab3Page implements OnInit, OnDestroy {
 
   selectFavorite(pharmacy: Pharmacy): void {
     this.pharmacyFacade.selectPharmacy(pharmacy);
+    void this.router.navigate(['/tab1']);
   }
 }

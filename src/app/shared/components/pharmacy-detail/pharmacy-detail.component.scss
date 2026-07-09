@@ -2,42 +2,15 @@
 
 .pharmacy-detail {
   position: relative;
-  animation: glass-slide-up 0.45s var(--ease-fluid) both;
-}
-
-.detail-topbar {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  right: 12px;
-  z-index: 3;
-  display: flex;
-  justify-content: space-between;
-}
-
-.icon-btn {
-  width: 42px;
-  height: 42px;
-  border: 1px solid var(--glass-border);
-  border-radius: 50%;
-  background: var(--glass-bg-strong);
-  backdrop-filter: blur(12px);
-  color: #1a1a2e;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.3s var(--ease-spring);
-
-  &:active {
-    transform: scale(0.92);
-  }
+  animation: glass-slide-up 0.35s var(--ease-fluid) both;
 }
 
 .photo-carousel {
   position: relative;
-  height: 220px;
+  height: 180px;
   overflow: hidden;
-  border-radius: 0 0 24px 24px;
+  margin: 0 16px;
+  border-radius: 20px;
 }
 
 .hero-photo {
@@ -62,7 +35,7 @@
   height: 8px;
   border-radius: 50%;
   border: none;
-  background: var(--glass-bg-soft);
+  background: rgba(255, 255, 255, 0.55);
   padding: 0;
   transition: all 0.3s var(--ease-fluid);
 
@@ -74,11 +47,11 @@
 }
 
 .detail-content {
-  padding: 18px 16px 24px;
+  padding: 16px 16px 8px;
 }
 
 .detail-header {
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 
 .header-badges {
@@ -113,7 +86,7 @@
 
 .detail-header h2 {
   margin: 0;
-  font-size: 1.35rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: #1a1a2e;
   letter-spacing: -0.03em;
@@ -122,14 +95,14 @@
 .district-line {
   margin: 8px 0 0;
   color: rgba(30, 30, 46, 0.72);
-  font-size: 0.95rem;
+  font-size: 0.92rem;
 }
 
 .status-row {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 14px;
+  margin-top: 12px;
 }
 
 .status-badge,
@@ -164,7 +137,7 @@
   display: grid;
   grid-template-columns: 1.2fr 1fr 1fr;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .action-btn {
@@ -172,19 +145,19 @@
   border-radius: 18px;
   background: var(--glass-bg-soft);
   backdrop-filter: blur(10px);
-  min-height: 72px;
+  min-height: 68px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 6px;
   color: #1a1a2e;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 700;
   transition: all 0.3s var(--ease-fluid);
 
   ion-icon {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
   }
 
   &:disabled {
@@ -202,8 +175,8 @@
 .info-section {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  margin-bottom: 20px;
+  gap: 12px;
+  padding-bottom: 12px;
 }
 
 .info-item {
@@ -218,6 +191,7 @@
     font-size: 1.2rem;
     color: #1a73e8;
     margin-top: 2px;
+    flex-shrink: 0;
   }
 
   .info-label {
@@ -249,14 +223,6 @@
   }
 }
 
-.directions-btn {
-  --background: linear-gradient(135deg, #1a73e8 0%, #4285f4 100%);
-  --border-radius: 20px;
-  --box-shadow: 0 8px 28px rgba(26, 115, 232, 0.35);
-  height: 50px;
-  font-weight: 700;
-}
-
 .detail-loading {
   position: absolute;
   inset: 0;
@@ -265,13 +231,17 @@
   align-items: center;
   justify-content: center;
   gap: 12px;
-  background: var(--glass-bg-strong);
+  background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(8px);
-  z-index: 5;
+  z-index: 2;
+  border-radius: 20px;
+  margin: 0 16px;
 
   p {
     margin: 0;
     color: rgba(30, 30, 46, 0.72);
     font-size: 0.9rem;
+    text-align: center;
+    padding: 0 24px;
   }
 }

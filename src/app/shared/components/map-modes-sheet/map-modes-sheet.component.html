@@ -1,15 +1,19 @@
 <ion-modal
   [isOpen]="isOpen"
-  [initialBreakpoint]="0.42"
-  [breakpoints]="[0.35, 0.42, 0.55]"
+  [initialBreakpoint]="0.48"
+  [breakpoints]="[0.4, 0.48, 0.68]"
+  [handle]="true"
   (didDismiss)="close()"
   class="map-modes-modal"
 >
   <ng-template>
     <ion-content class="map-modes-content">
       <div class="sheet-header">
-        <h2>Modes carte</h2>
-        <button class="close-btn" type="button" (click)="close()">
+        <div class="sheet-heading">
+          <p class="eyebrow">Affichage</p>
+          <h2>Modes de carte</h2>
+        </div>
+        <button class="close-btn" type="button" aria-label="Fermer" (click)="close()">
           <ion-icon name="close"></ion-icon>
         </button>
       </div>

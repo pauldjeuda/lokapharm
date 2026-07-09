@@ -1,16 +1,7 @@
 <div *ngIf="pharmacy" class="pharmacy-detail">
-  <div class="detail-topbar">
-    <button class="icon-btn" type="button" (click)="onBack()">
-      <ion-icon name="arrow-back"></ion-icon>
-    </button>
-    <button class="icon-btn" type="button" (click)="onFavoriteToggle()">
-      <ion-icon [name]="isFavorite ? 'star' : 'star-outline'"></ion-icon>
-    </button>
-  </div>
-
   <div class="photo-carousel">
     <img
-      [src]="photos[0] | pharmacyPhoto"
+      [src]="photos[activePhotoIndex] | pharmacyPhoto"
       [alt]="pharmacy.name"
       class="hero-photo"
       loading="lazy"
@@ -21,6 +12,7 @@
         type="button"
         class="photo-dot"
         [class.active]="i === activePhotoIndex"
+        [attr.aria-label]="'Photo ' + (i + 1)"
         (click)="selectPhoto(i)"
       ></button>
     </div>
@@ -35,7 +27,6 @@
         </div>
         <span class="source-pill">{{ dataSourceLabel }}</span>
       </div>
-      <h2>{{ pharmacy.name }}</h2>
       <p class="district-line">{{ locationLine }}</p>
       <div class="status-row">
         <span class="status-badge" [ngClass]="openStatusClass">{{ openStatusLabel }}</span>
@@ -49,7 +40,12 @@
     </div>
 
     <div class="action-row">
-      <button class="action-btn primary" type="button" [disabled]="routeLoading" (click)="onStartNavigation()">
+      <button
+        class="action-btn primary"
+        type="button"
+        [disabled]="routeLoading"
+        (click)="onStartNavigation()"
+      >
         <ion-icon name="navigate"></ion-icon>
         <span>{{ routeLoading ? 'Calcul...' : 'Y aller' }}</span>
       </button>
@@ -129,16 +125,6 @@
         </div>
       </div>
     </div>
-
-    <ion-button
-      expand="block"
-      class="directions-btn"
-      [disabled]="routeLoading"
-      (click)="onStartNavigation()"
-    >
-      <ion-icon slot="start" name="navigate"></ion-icon>
-      {{ routeLoading ? 'Calcul du trajet...' : 'Démarrer la navigation' }}
-    </ion-button>
   </div>
 
   <div *ngIf="loading" class="detail-loading">

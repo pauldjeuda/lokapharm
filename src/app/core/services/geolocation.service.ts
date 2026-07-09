@@ -35,25 +35,35 @@ export class GeolocationService {
 
   watchPosition(): Observable<GeoPoint> {
     return new Observable<GeoPoint>((subscriber) => {
+      let fastPosition: GeoPoint | null = null;
+
       void this.getFastPosition()
         .then((position) => {
+          fastPosition = position;
           this.positionSubject.next(position);
           subscriber.next(position);
-          subscriber.complete();
+
+          void this.getCurrentPosition()
+            .then((precise) => {
+              if (!this.isSamePoint(position, precise)) {
+                subscriber.next(precise);
+              }
+              subscriber.complete();
+            })
+            .catch(() => subscriber.complete());
         })
-        .catch((error) => subscriber.error(error));
-
-      void this.refinePositionInBackground();
+        .catch(() => {
+          void this.getCurrentPosition()
+            .then((precise) => {
+              this.positionSubject.next(precise);
+              if (!fastPosition || !this.isSamePoint(fastPosition, precise)) {
+                subscriber.next(precise);
+              }
+              subscriber.complete();
+            })
+            .catch((error) => subscriber.error(error));
+        });
     });
-  }
-
-  private async refinePositionInBackground(): Promise<void> {
-    try {
-      const precise = await this.getCurrentPosition();
-      this.positionSubject.next(precise);
-    } catch {
-      // Conserver la position rapide déjà affichée.
-    }
   }
 
   startLiveTracking(onPosition: (position: GeoPoint) => void): Promise<void> {
@@ -109,11 +119,22 @@ export class GeolocationService {
   }
 
   recenter(): Observable<GeoPoint> {
-    return this.watchPosition();
+    return new Observable<GeoPoint>((subscriber) => {
+      void this.getCurrentPosition()
+        .then((position) => {
+          subscriber.next(position);
+          subscriber.complete();
+        })
+        .catch((error) => subscriber.error(error));
+    });
   }
 
   getLastKnownPosition(): GeoPoint | null {
     return this.positionSubject.value;
+  }
+
+  private isSamePoint(a: GeoPoint, b: GeoPoint): boolean {
+    return Math.abs(a.lat - b.lat) < 0.00001 && Math.abs(a.lng - b.lng) < 0.00001;
   }
 
   private mapPosition(position: Position): GeoPoint {

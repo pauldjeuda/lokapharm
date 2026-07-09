@@ -16,6 +16,7 @@ import { Pharmacy, PharmacyDetails } from '../../core/models/pharmacy.model';
 import { GeolocationService } from '../../core/services/geolocation.service';
 import { NominatimApiService, NominatimEnrichment } from '../../data/api/nominatim-api.service';
 import { OsmOverpassApiService } from '../../data/api/osm-overpass-api.service';
+import { CacheService } from '../../core/services/cache.service';
 import { haversineDistance, sortByDistance } from '../utils/distance.util';
 import {
   buildFullAddress,
@@ -35,6 +36,8 @@ export type DataSourceLabel =
   | 'OpenStreetMap'
   | 'Démonstration'
   | 'Aucune';
+
+const FAVORITES_STORAGE_KEY = 'lokaphar_favorites_v2';
 
 @Injectable({ providedIn: 'root' })
 export class PharmacyFacade {
@@ -85,7 +88,8 @@ export class PharmacyFacade {
     private readonly repository: PharmacyRepository,
     private readonly geolocation: GeolocationService,
     private readonly nominatim: NominatimApiService,
-    private readonly osmApi: OsmOverpassApiService
+    private readonly osmApi: OsmOverpassApiService,
+    private readonly cache: CacheService
   ) {
     this.loadFavorites();
 
@@ -237,7 +241,7 @@ export class PharmacyFacade {
     }
 
     this.favoritesSubject.next(favorites);
-    localStorage.setItem('lokaphar_favorites', JSON.stringify(favorites));
+    this.cache.set(FAVORITES_STORAGE_KEY, favorites).subscribe();
   }
 
   isFavorite(pharmacy: Pharmacy): boolean {
@@ -288,12 +292,10 @@ export class PharmacyFacade {
   }
 
   private loadFavorites(): void {
-    try {
-      const raw = localStorage.getItem('lokaphar_favorites');
-      this.favoritesSubject.next(raw ? JSON.parse(raw) : []);
-    } catch {
-      this.favoritesSubject.next([]);
-    }
+    this.cache.get<Pharmacy[]>(FAVORITES_STORAGE_KEY).subscribe({
+      next: (favorites) => this.favoritesSubject.next(favorites ?? []),
+      error: () => this.favoritesSubject.next([]),
+    });
   }
 
   private mapSourceLabel(
