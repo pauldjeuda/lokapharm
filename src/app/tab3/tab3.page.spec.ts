@@ -1,5 +1,9 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { IonicModule } from '@ionic/angular';
+import { IonicStorageModule } from '@ionic/storage-angular';
 
 import { ExploreContainerComponentModule } from '../explore-container/explore-container.module';
 
@@ -12,7 +16,8 @@ describe('Tab3Page', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [Tab3Page],
-      imports: [IonicModule.forRoot(), ExploreContainerComponentModule]
+      imports: [IonicModule.forRoot(), IonicStorageModule.forRoot(), ExploreContainerComponentModule, RouterTestingModule],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(Tab3Page);

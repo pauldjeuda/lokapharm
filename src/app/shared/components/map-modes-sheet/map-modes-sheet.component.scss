@@ -60,20 +60,20 @@
 
 .modes-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  margin-bottom: 22px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 18px;
 }
 
 .mode-card {
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 22px;
-  padding: 10px;
+  border-radius: 14px;
+  padding: 6px 4px 5px;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  gap: 10px;
+  align-items: center;
+  gap: 5px;
   transition: transform 0.3s var(--ease-spring), box-shadow 0.3s var(--ease-fluid), border-color 0.3s var(--ease-fluid);
 
   &:active {
@@ -87,25 +87,31 @@
 
   &.selected {
     border-color: rgba(138, 180, 248, 0.35);
-    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
   }
 }
 
 .mode-preview {
   width: 100%;
-  aspect-ratio: 1;
-  border-radius: 18px;
+  height: 44px;
+  aspect-ratio: auto;
+  border-radius: 10px;
   overflow: hidden;
-  border: 2px solid rgba(255, 255, 255, 0.12);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
   position: relative;
   transition: all 0.35s var(--ease-fluid);
 }
 
 .mode-label {
-  font-size: 0.78rem;
+  font-size: 0.62rem;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.92);
-  text-align: left;
+  text-align: center;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .preview-explore {
@@ -117,8 +123,8 @@
 
   .mode-preview-accent {
     position: absolute;
-    inset: 28% 18%;
-    border-top: 4px solid #ea4335;
+    inset: 34% 16%;
+    border-top: 2px solid #ea4335;
     border-radius: 999px;
     transform: rotate(-12deg);
   }
@@ -129,7 +135,7 @@
 
   .mode-preview-accent {
     position: absolute;
-    inset: 22% 20%;
+    inset: 28% 18%;
     background:
       linear-gradient(90deg, transparent 42%, #34a853 42%, #34a853 46%, transparent 46%),
       linear-gradient(0deg, transparent 58%, #fbbc04 58%, #fbbc04 62%, transparent 62%);
@@ -159,12 +165,6 @@
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-@media (max-width: 360px) {
-  .modes-grid {
-    grid-template-columns: 1fr;
-  }
 }
 
 .toggle-title {

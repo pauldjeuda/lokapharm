@@ -12,8 +12,9 @@
       ></ion-searchbar>
 
       <div class="filter-chips">
-        <ion-chip
+        <button
           *ngFor="let filter of filters"
+          type="button"
           class="filter-chip"
           [class.active]="activeFilter === filter.id"
           (click)="setFilter(filter.id)"
@@ -21,11 +22,8 @@
           <span class="filter-chip-art" aria-hidden="true">
             <ion-icon [name]="filter.icon"></ion-icon>
           </span>
-          <ion-label>
-            <strong>{{ filter.label }}</strong>
-            <small>{{ filter.hint }}</small>
-          </ion-label>
-        </ion-chip>
+          <span class="filter-chip-label">{{ filter.label }}</span>
+        </button>
       </div>
     </div>
 

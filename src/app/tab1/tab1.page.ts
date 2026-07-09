@@ -60,10 +60,10 @@ export class Tab1Page implements OnInit, AfterViewInit, OnDestroy, ViewWillEnter
   mapSettings: MapViewSettings = { mode: 'explore', traffic: false, labels: true };
   favoriteIds = new Set<string>();
 
-  readonly filters: Array<{ id: PharmacyFilter; label: string; icon: string; hint: string }> = [
-    { id: 'nearby', label: 'À proximité', icon: 'locate', hint: 'Autour de vous' },
-    { id: 'yaounde', label: 'Yaoundé', icon: 'business', hint: 'Capitale' },
-    { id: 'douala', label: 'Douala', icon: 'boat', hint: 'Littoral' },
+  readonly filters: Array<{ id: PharmacyFilter; label: string; icon: string }> = [
+    { id: 'nearby', label: 'Proche', icon: 'locate' },
+    { id: 'yaounde', label: 'Yaoundé', icon: 'business' },
+    { id: 'douala', label: 'Douala', icon: 'boat' },
   ];
 
   get isDetailView(): boolean {
