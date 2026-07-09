@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace "cm.lokaphar.app"
+    namespace "cm.Lokapharm.app"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "cm.lokaphar.app"
+        applicationId "cm.Lokapharm.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

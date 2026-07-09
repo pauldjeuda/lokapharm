@@ -37,7 +37,7 @@ export type DataSourceLabel =
   | 'Démonstration'
   | 'Aucune';
 
-const FAVORITES_STORAGE_KEY = 'lokaphar_favorites_v2';
+const FAVORITES_STORAGE_KEY = 'Lokapharm_favorites_v2';
 
 @Injectable({ providedIn: 'root' })
 export class PharmacyFacade {

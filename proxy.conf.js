@@ -1,4 +1,4 @@
-const PROXY_USER_AGENT = 'Lokaphar/1.0.0 (cm.lokaphar.app; contact@lokaphar.cm)';
+const PROXY_USER_AGENT = 'Lokapharm/1.0.0 (cm.Lokapharm.app; contact@Lokapharm.cm)';
 
 function withOsmHeaders(proxyReq) {
   proxyReq.setHeader('User-Agent', PROXY_USER_AGENT);

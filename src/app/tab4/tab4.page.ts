@@ -27,6 +27,6 @@ export class Tab4Page {
   }
 
   openSupportEmail(): void {
-    window.open(`mailto:${this.supportEmail}?subject=Support%20Lokaphar`, '_system');
+    window.open(`mailto:${this.supportEmail}?subject=Support%20Lokapharm`, '_system');
   }
 }

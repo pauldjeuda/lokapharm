@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Lokaphar</string>
-    <string name="title_activity_main">Lokaphar</string>
-    <string name="package_name">cm.lokaphar.app</string>
-    <string name="custom_url_scheme">cm.lokaphar.app</string>
+    <string name="app_name">Lokapharm</string>
+    <string name="title_activity_main">Lokapharm</string>
+    <string name="package_name">cm.Lokapharm.app</string>
+    <string name="custom_url_scheme">cm.Lokapharm.app</string>
 </resources>

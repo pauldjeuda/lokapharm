@@ -9,9 +9,9 @@ export const environment = {
   useDemoData: false,
   app: {
     version: '1.0.0',
-    privacyPolicyUrl: 'https://lokaphar.cm/privacy',
-    termsUrl: 'https://lokaphar.cm/terms',
-    supportEmail: 'contact@lokaphar.cm',
-    websiteUrl: 'https://lokaphar.cm',
+    privacyPolicyUrl: 'https://Lokapharm.cm/privacy',
+    termsUrl: 'https://Lokapharm.cm/terms',
+    supportEmail: 'contact@Lokapharm.cm',
+    websiteUrl: 'https://Lokapharm.cm',
   },
 };

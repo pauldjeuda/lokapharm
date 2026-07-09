@@ -1,4 +1,4 @@
-package cm.lokaphar.app;
+package cm.Lokapharm.app;
 
 import com.getcapacitor.BridgeActivity;
 

@@ -8,10 +8,10 @@ export interface AppConfig {
 
 export const APP_CONFIG: AppConfig = {
   version: '1.0.0',
-  privacyPolicyUrl: 'https://lokaphar.cm/privacy',
-  termsUrl: 'https://lokaphar.cm/terms',
-  supportEmail: 'contact@lokaphar.cm',
-  websiteUrl: 'https://lokaphar.cm',
+  privacyPolicyUrl: 'https://Lokapharm.cm/privacy',
+  termsUrl: 'https://Lokapharm.cm/terms',
+  supportEmail: 'contact@Lokapharm.cm',
+  websiteUrl: 'https://Lokapharm.cm',
 };
 
-export const APP_USER_AGENT = `Lokaphar/${APP_CONFIG.version} (cm.lokaphar.app; ${APP_CONFIG.supportEmail})`;
+export const APP_USER_AGENT = `Lokapharm/${APP_CONFIG.version} (cm.Lokapharm.app; ${APP_CONFIG.supportEmail})`;

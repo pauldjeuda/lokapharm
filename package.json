@@ -1,8 +1,8 @@
 {
-  "name": "lokaphar",
+  "name": "Lokapharm",
   "version": "1.0.0",
-  "author": "Lokaphar",
-  "homepage": "https://lokaphar.cm",
+  "author": "Lokapharm",
+  "homepage": "https://Lokapharm.cm",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.conf.js",

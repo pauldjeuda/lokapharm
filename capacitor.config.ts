@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'cm.lokaphar.app',
-  appName: 'Lokaphar',
+  appId: 'cm.Lokapharm.app',
+  appName: 'Lokapharm',
   webDir: 'www',
   server: {
     androidScheme: 'https',
@@ -14,7 +14,7 @@ const config: CapacitorConfig = {
   },
   ios: {
     contentInset: 'automatic',
-    scheme: 'Lokaphar',
+    scheme: 'Lokapharm',
     preferredContentMode: 'mobile',
   },
   plugins: {

@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>fr</string>
 	<key>CFBundleDisplayName</key>
-        <string>Lokaphar</string>
+        <string>Lokapharm</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -46,7 +46,7 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Lokaphar utilise votre position pour afficher les pharmacies à proximité, calculer les itinéraires et la navigation.</string>
+	<string>Lokapharm utilise votre position pour afficher les pharmacies à proximité, calculer les itinéraires et la navigation.</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 </dict>

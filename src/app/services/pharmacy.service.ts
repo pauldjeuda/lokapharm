@@ -45,7 +45,7 @@ interface OsrmRouteResponse {
  * 3. Si le cache a plus de 7 jours : affichage stale + rafraîchissement silencieux en arrière-plan.
  * 4. Si le réseau échoue : on conserve le dernier catalogue connu.
  */
-const CATALOG_CACHE_KEY = 'lokaphar_pharmacies_catalog_v1';
+const CATALOG_CACHE_KEY = 'Lokapharm_pharmacies_catalog_v1';
 const CATALOG_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 const STALE_OK_MS = 30 * 24 * 60 * 60 * 1000;
 

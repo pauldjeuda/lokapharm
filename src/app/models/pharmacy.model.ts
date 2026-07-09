@@ -1,5 +1,5 @@
 /**
- * Modèle canonique Lokaphar — données officielles MINSANTE / DPML.
+ * Modèle canonique Lokapharm — données officielles MINSANTE / DPML.
  * Source unique : base locale (JSON embarqué ou API back-end).
  */
 

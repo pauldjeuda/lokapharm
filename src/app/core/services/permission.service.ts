@@ -4,7 +4,7 @@ import { Storage } from '@ionic/storage-angular';
 import { PermissionRationaleComponent } from '../../shared/components/permission-rationale/permission-rationale.component';
 import { GeolocationService } from './geolocation.service';
 
-const LOCATION_RATIONALE_KEY = 'lokaphar_location_rationale_accepted';
+const LOCATION_RATIONALE_KEY = 'Lokapharm_location_rationale_accepted';
 
 @Injectable({ providedIn: 'root' })
 export class PermissionService {
