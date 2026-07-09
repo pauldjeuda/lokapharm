@@ -38,8 +38,7 @@ export class PermissionService {
       component: PermissionRationaleComponent,
       cssClass: 'location-permission-modal',
       backdropDismiss: false,
-      breakpoints: [0, 0.42],
-      initialBreakpoint: 0.42,
+      showBackdrop: true,
     });
 
     await modal.present();

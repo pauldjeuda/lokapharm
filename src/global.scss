@@ -169,9 +169,25 @@ ion-fab-button:active::part(native) {
   box-shadow: 0 12px 32px rgba(26, 115, 232, 0.15);
 }
 
-/* Modal autorisation localisation */
+/* Modal autorisation localisation — popup centrée */
 ion-modal.location-permission-modal {
-  --backdrop-opacity: 0.58;
-  --border-radius: 18px 18px 0 0;
-  --box-shadow: 0 -8px 32px rgba(31, 38, 135, 0.18);
+  --width: min(92vw, 380px);
+  --height: auto;
+  --max-height: 85vh;
+  --border-radius: 22px;
+  --box-shadow: 0 20px 56px rgba(31, 38, 135, 0.28);
+  --backdrop-opacity: 0.55;
+  align-items: center;
+  justify-content: center;
+}
+
+ion-modal.location-permission-modal::part(backdrop) {
+  background: rgba(15, 18, 28, 0.55);
+}
+
+ion-modal.location-permission-modal::part(content) {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 22px;
 }
