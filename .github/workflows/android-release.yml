@@ -18,8 +18,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      JAVA_VERSION: '17'
-      NODE_VERSION: '20'
+      JAVA_VERSION: '21'
+      NODE_VERSION: '22'
 
     steps:
       - name: Checkout
