@@ -1,5 +1,6 @@
 .about-content {
   --background: transparent;
+  --padding-bottom: var(--app-content-bottom-safe);
   background:
     radial-gradient(circle at top left, rgba(26, 115, 232, 0.1), transparent 28%),
     linear-gradient(180deg, #f7fbff 0%, #f4f8ff 32%, #eef7f1 100%);

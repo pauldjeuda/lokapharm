@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { concat, EMPTY, Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
@@ -13,8 +14,6 @@ import {
   MergedPharmacySourcesResult,
 } from '../../domain/utils/pharmacy-merge.util';
 import { sortByDistance } from '../../domain/utils/distance.util';
-import { toCorePharmacies } from '../../models/pharmacy.mapper';
-import { PharmacyCityFilter, PharmacyService } from '../../services/pharmacy.service';
 import { OsmOverpassApiService } from '../api/osm-overpass-api.service';
 import { MOCK_PHARMACIES } from '../mock/mock-pharmacies';
 
@@ -32,30 +31,28 @@ export interface PharmacyLoadResult {
 
 const OSM_CACHE_PREFIX = 'pharmacies_osm_v2';
 const OSM_STALE_OK_MS = 5 * 60 * 1000;
+const CATALOG_CACHE_KEY = 'Lokapharm_pharmacies_catalog_v1';
+const CATALOG_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+const CATALOG_STALE_OK_MS = 30 * 24 * 60 * 60 * 1000;
 
 @Injectable({ providedIn: 'root' })
 export class PharmacyRepository {
-  constructor(
-    private readonly pharmacyService: PharmacyService,
-    private readonly osmApi: OsmOverpassApiService,
-    private readonly cache: CacheService
-  ) {}
+  private readonly http = inject(HttpClient);
+  private readonly osmApi = inject(OsmOverpassApiService);
+  private readonly cache = inject(CacheService);
 
   /**
    * Charge d'abord le catalogue local (rapide / offline), puis enrichit avec OSM.
    */
   getPharmacies(lat: number, lng: number, area: PharmacySearchArea = 'nearby'): Observable<PharmacyLoadResult> {
-    const cityFilter = this.mapAreaToCityFilter(area);
-
-    return this.pharmacyService.getNearbyPharmacies(lat, lng, cityFilter).pipe(
+    return this.getLocalPharmacies(lat, lng, area).pipe(
       switchMap((local) => {
-        const localCore = toCorePharmacies(local.pharmacies);
-        const localMerged = mergePharmacySources(localCore, []);
+        const localMerged = mergePharmacySources(local.pharmacies, []);
         const fastResult = this.toLoadResult(localMerged, local.fromCache, true);
 
         const osmEnrichment$ = this.getOsmPharmacies(lat, lng, area).pipe(
           map((osm) => {
-            const merged = mergePharmacySources(localCore, osm.pharmacies);
+            const merged = mergePharmacySources(local.pharmacies, osm.pharmacies);
             return this.toLoadResult(merged, local.fromCache && osm.fromCache, false);
           }),
           catchError(() => EMPTY)
@@ -78,6 +75,64 @@ export class PharmacyRepository {
           fromCache: false,
         } satisfies PharmacyLoadResult);
       })
+    );
+  }
+
+  private getLocalPharmacies(
+    lat: number,
+    lng: number,
+    area: PharmacySearchArea
+  ): Observable<{ pharmacies: Pharmacy[]; fromCache: boolean }> {
+    return this.loadCatalog().pipe(
+      map((catalog) => {
+        const pharmacies = this.filterCatalogByArea(catalog.pharmacies, area)
+          .map((pharmacy) => ({
+            ...pharmacy,
+            distanceMeters: this.haversineDistance(lat, lng, pharmacy.lat, pharmacy.lng),
+            source: 'minsante' as const,
+          }))
+          .sort((first, second) => (first.distanceMeters ?? 0) - (second.distanceMeters ?? 0));
+
+        return { pharmacies, fromCache: catalog.fromCache };
+      })
+    );
+  }
+
+  private loadCatalog(): Observable<{ pharmacies: Pharmacy[]; fromCache: boolean }> {
+    return this.cache.getTimestamp(CATALOG_CACHE_KEY).pipe(
+      switchMap((timestamp) => {
+        const ageMs = timestamp ? Date.now() - timestamp : Number.POSITIVE_INFINITY;
+
+        return this.cache.get<Pharmacy[]>(CATALOG_CACHE_KEY).pipe(
+          switchMap((cached) => {
+            if (cached?.length && ageMs < CATALOG_TTL_MS) {
+              return of({ pharmacies: cached, fromCache: true });
+            }
+
+            if (cached?.length && ageMs < CATALOG_STALE_OK_MS) {
+              this.fetchCatalog().pipe(
+                tap((fresh) => this.cache.set(CATALOG_CACHE_KEY, fresh).subscribe()),
+                catchError(() => of([]))
+              ).subscribe();
+              return of({ pharmacies: cached, fromCache: true });
+            }
+
+            return this.fetchCatalog().pipe(
+              map((pharmacies) => ({ pharmacies, fromCache: false })),
+              tap((result) => this.cache.set(CATALOG_CACHE_KEY, result.pharmacies).subscribe()),
+              catchError(() => cached?.length
+                ? of({ pharmacies: cached, fromCache: true })
+                : EMPTY)
+            );
+          })
+        );
+      })
+    );
+  }
+
+  private fetchCatalog(): Observable<Pharmacy[]> {
+    return this.http.get<Pharmacy[]>(environment.pharmaciesApi).pipe(
+      map((pharmacies) => pharmacies.filter((pharmacy) => this.isValidPharmacy(pharmacy)))
     );
   }
 
@@ -181,15 +236,33 @@ export class PharmacyRepository {
     return `${OSM_CACHE_PREFIX}_${toLocationGridKey(lat, lng)}`;
   }
 
-  private mapAreaToCityFilter(area: PharmacySearchArea): PharmacyCityFilter {
-    if (area === 'yaounde') {
-      return 'Yaoundé';
+  private filterCatalogByArea(pharmacies: Pharmacy[], area: PharmacySearchArea): Pharmacy[] {
+    if (area === 'nearby') {
+      return pharmacies;
     }
 
-    if (area === 'douala') {
-      return 'Douala';
-    }
+    const city = area === 'yaounde' ? 'yaoundé' : 'douala';
+    return pharmacies.filter((pharmacy) => pharmacy.city?.toLowerCase() === city);
+  }
 
-    return 'all';
+  private isValidPharmacy(pharmacy: Pharmacy): boolean {
+    return Boolean(
+      pharmacy?.id &&
+      pharmacy.name &&
+      Number.isFinite(pharmacy.lat) &&
+      Number.isFinite(pharmacy.lng)
+    );
+  }
+
+  private haversineDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
+    const toRadians = (degrees: number) => (degrees * Math.PI) / 180;
+    const deltaLat = toRadians(lat2 - lat1);
+    const deltaLng = toRadians(lng2 - lng1);
+    const originLat = toRadians(lat1);
+    const destinationLat = toRadians(lat2);
+    const a = Math.sin(deltaLat / 2) ** 2 +
+      Math.cos(originLat) * Math.cos(destinationLat) * Math.sin(deltaLng / 2) ** 2;
+
+    return 2 * 6_371_000 * Math.asin(Math.sqrt(a));
   }
 }

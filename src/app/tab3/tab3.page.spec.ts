@@ -5,8 +5,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { IonicModule } from '@ionic/angular';
 import { IonicStorageModule } from '@ionic/storage-angular';
 
-import { ExploreContainerComponentModule } from '../explore-container/explore-container.module';
-
 import { Tab3Page } from './tab3.page';
 
 describe('Tab3Page', () => {
@@ -16,7 +14,7 @@ describe('Tab3Page', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [Tab3Page],
-      imports: [IonicModule.forRoot(), IonicStorageModule.forRoot(), ExploreContainerComponentModule, RouterTestingModule],
+      imports: [IonicModule.forRoot(), IonicStorageModule.forRoot(), RouterTestingModule],
       providers: [provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
