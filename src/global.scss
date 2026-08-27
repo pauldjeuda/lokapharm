@@ -30,9 +30,18 @@
 @import "leaflet/dist/leaflet.css";
 
 :root {
-  --app-tab-bar-height: 64px;
-  --app-tab-bar-bottom-offset: calc(env(safe-area-inset-bottom, 0px) + 12px);
-  --app-content-bottom-safe: calc(var(--app-tab-bar-height) + var(--app-tab-bar-bottom-offset) + 16px);
+ codex/resoudre-conflit-de-z-index-et-interactions
+  // Hiérarchie de calques globale : les couches de la carte restent sous les
+  // éléments d'interface qui peuvent recevoir des interactions tactiles.
+  --z-leaflet-map: 0;
+  --z-leaflet-controls: 10;
+  --z-map-search-overlay: 20;
+  --z-fab-stack: 30;
+  --z-tab-bar: 50;
+  --z-navigation-panel: 60;
+  --z-sheet-modal: 70;
+  --z-permission-modal: 100;
+ main
 }
 
 * {
@@ -95,6 +104,41 @@ ion-item {
 
 ion-modal {
   --backdrop-opacity: 0;
+}
+
+// Leaflet uses high z-index values internally. Its own stacking context keeps
+// those values inside the map while preserving its panes' native ordering.
+.leaflet-container {
+  z-index: var(--z-leaflet-map);
+}
+
+.leaflet-top,
+.leaflet-bottom {
+  z-index: var(--z-leaflet-controls) !important;
+}
+
+ion-tab-bar {
+  z-index: var(--z-tab-bar);
+}
+
+// Ionic overlays receive an inline z-index. Override it deliberately so the
+// app-level layering remains deterministic across browsers and devices.
+ion-modal.pharmacy-sheet,
+ion-modal.map-modes-modal {
+  z-index: var(--z-sheet-modal) !important;
+}
+
+ion-modal.pharmacy-sheet::part(content) {
+  pointer-events: auto;
+  touch-action: pan-y;
+}
+
+// Active guidance needs the full lower viewport; the tab bar must neither be
+// visible nor intercept taps while navigation is in progress.
+body.navigation-active ion-tab-bar {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(calc(100% + env(safe-area-inset-bottom) + 16px));
 }
 
 ion-modal::part(handle) {
@@ -200,6 +244,7 @@ ion-modal.location-permission-modal {
   --backdrop-opacity: 0.55;
   align-items: center;
   justify-content: center;
+  z-index: var(--z-permission-modal) !important;
 }
 
 ion-modal.location-permission-modal::part(backdrop) {
