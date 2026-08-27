@@ -27,14 +27,15 @@
       </div>
     </div>
 
-    <div class="fab-stack" *ngIf="!isNavigating" [style.bottom]="fabBottomOffset">
-      <ion-fab-button size="small" class="map-fab" (click)="openMapModes()" aria-label="Changer le mode de carte">
-        <ion-icon name="layers"></ion-icon>
-      </ion-fab-button>
-      <ion-fab-button size="small" class="map-fab" (click)="recenterOnUser()" aria-label="Recentrer sur ma position">
-        <ion-icon name="locate"></ion-icon>
-      </ion-fab-button>
-    </div>
+  </div>
+
+  <div class="fab-stack" *ngIf="!isNavigating" [style.bottom]="fabBottomOffset">
+    <ion-fab-button size="small" class="map-fab" (click)="openMapModes()" aria-label="Changer le mode de carte">
+      <ion-icon name="layers"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-button size="small" class="map-fab" (click)="recenterOnUser()" aria-label="Recentrer sur ma position">
+      <ion-icon name="locate"></ion-icon>
+    </ion-fab-button>
   </div>
 
   <div *ngIf="isNavigating" class="navigation-panel">

@@ -151,6 +151,7 @@ export class Tab1Page implements OnInit, AfterViewInit, OnDestroy, ViewWillEnter
     this.subscriptions.add(
       this.navigationFacade.navigating$.subscribe((navigating) => {
         this.isNavigating = navigating;
+        document.body.classList.toggle('navigation-active', navigating);
       })
     );
 
@@ -271,6 +272,7 @@ export class Tab1Page implements OnInit, AfterViewInit, OnDestroy, ViewWillEnter
   }
 
   ngOnDestroy(): void {
+    document.body.classList.remove('navigation-active');
     this.subscriptions.unsubscribe();
     if (this.isNavigating) {
       this.navigationFacade.stopNavigation();

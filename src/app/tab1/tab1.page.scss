@@ -7,7 +7,8 @@
 .map-container {
   position: absolute;
   inset: 0;
-  z-index: 0;
+  z-index: var(--z-leaflet-map);
+  isolation: isolate;
   transition:
     filter 0.6s var(--ease-fluid),
     transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
@@ -20,7 +21,7 @@
 .map-overlay {
   position: absolute;
   inset: 0;
-  z-index: 500;
+  z-index: var(--z-map-search-overlay);
   pointer-events: none;
   transition: opacity 0.4s var(--ease-fluid);
 
@@ -139,6 +140,7 @@
 .fab-stack {
   position: absolute;
   right: 16px;
+  z-index: var(--z-fab-stack);
   pointer-events: auto;
   display: flex;
   flex-direction: column;
@@ -168,6 +170,7 @@
 .pharmacy-sheet {
   --border-radius: 28px 28px 0 0;
   --box-shadow: 0 -8px 48px rgba(31, 38, 135, 0.15);
+  z-index: var(--z-sheet-modal);
 }
 
 .sheet-shell {
@@ -177,6 +180,7 @@
   background: var(--glass-bg-strong);
   backdrop-filter: var(--glass-blur-strong) saturate(160%);
   -webkit-backdrop-filter: var(--glass-blur-strong) saturate(160%);
+  touch-action: pan-y;
 }
 
 .sheet-sticky-header {
@@ -506,8 +510,8 @@
   position: absolute;
   left: 16px;
   right: 16px;
-  bottom: calc(env(safe-area-inset-bottom) + 88px);
-  z-index: 700;
+  bottom: calc(env(safe-area-inset-bottom) + 16px);
+  z-index: var(--z-navigation-panel);
   padding: 20px;
   border-radius: 28px;
   @include glass.glass-surface(24px, 0.92);
@@ -600,8 +604,7 @@
   );
 }
 
-.map-overlay.navigating .search-panel,
-.map-overlay.navigating .fab-stack {
+.map-overlay.navigating .search-panel {
   opacity: 0;
   transform: translateY(-12px);
   pointer-events: none;
