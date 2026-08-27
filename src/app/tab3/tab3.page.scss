@@ -2,6 +2,7 @@
 
 .favorites-content {
   --background: transparent;
+  --padding-bottom: var(--app-content-bottom-safe);
   background: linear-gradient(160deg, #fff8e1 0%, #f0f4ff 50%, #e6f4ea 100%);
 }
 
