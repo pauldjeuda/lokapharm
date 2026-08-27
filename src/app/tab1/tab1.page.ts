@@ -6,7 +6,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { IonModal, ViewWillEnter, ViewWillLeave } from '@ionic/angular';
+import { IonModal, ViewDidEnter, ViewWillEnter, ViewWillLeave } from '@ionic/angular';
 import * as L from 'leaflet';
 import { combineLatest, Subscription } from 'rxjs';
 import { distinctUntilChanged, throttleTime } from 'rxjs/operators';
@@ -29,7 +29,9 @@ import { RoutingFacade } from '../domain/facades/routing.facade';
   styleUrls: ['tab1.page.scss'],
   standalone: false,
 })
-export class Tab1Page implements OnInit, AfterViewInit, OnDestroy, ViewWillEnter, ViewWillLeave {
+export class Tab1Page
+  implements OnInit, AfterViewInit, OnDestroy, ViewWillEnter, ViewDidEnter, ViewWillLeave
+{
   @ViewChild('mapContainer', { static: true }) mapContainer!: ElementRef<HTMLDivElement>;
   @ViewChild('pharmacySheetModal') pharmacySheetModal?: IonModal;
 
@@ -83,10 +85,11 @@ export class Tab1Page implements OnInit, AfterViewInit, OnDestroy, ViewWillEnter
   private traveledLayer?: L.Polyline;
   private routeFrameFittedFor: string | null = null;
   private previewFadeTimer?: ReturnType<typeof setTimeout>;
-  private invalidateSizeTimer?: ReturnType<typeof setTimeout>;
+  private invalidateSizeFrame?: number;
   private lastTraveledUpdate = 0;
-  private mapActive = true;
+  private mapActive = false;
   private subscriptions = new Subscription();
+  private positionSubscription?: Subscription;
 
   private readonly pharmacyIconDefault = this.createPharmacyIcon(false);
   private readonly pharmacyIconSelected = this.createPharmacyIcon(true);
@@ -167,41 +170,6 @@ export class Tab1Page implements OnInit, AfterViewInit, OnDestroy, ViewWillEnter
     );
 
     this.subscriptions.add(
-      combineLatest([
-        this.navigationFacade.currentPosition$,
-        this.pharmacyFacade.userPosition$,
-        this.navigationFacade.navigating$,
-      ])
-        .pipe(
-          throttleTime(this.POSITION_THROTTLE_MS, undefined, { leading: true, trailing: true }),
-          distinctUntilChanged(
-            ([aPos, uPos, aNav], [bPos, bPos2, bNav]) =>
-              aNav === bNav &&
-              aPos?.lat === bPos?.lat &&
-              aPos?.lng === bPos?.lng &&
-              uPos?.lat === bPos2?.lat &&
-              uPos?.lng === bPos2?.lng
-          )
-        )
-        .subscribe(([navPosition, userPosition, navigating]) => {
-          if (!this.mapActive) {
-            return;
-          }
-
-          const position = navigating ? navPosition ?? userPosition : userPosition;
-          if (!position) {
-            return;
-          }
-
-          this.updateUserMarker(position.lat, position.lng);
-          if (navigating) {
-            this.followUser(position);
-            this.updateTraveledRoute(position);
-          }
-        })
-    );
-
-    this.subscriptions.add(
       this.pharmacyFacade.pharmacyDetails$.subscribe((details) => {
         this.pharmacyDetails = details;
       })
@@ -253,17 +221,31 @@ export class Tab1Page implements OnInit, AfterViewInit, OnDestroy, ViewWillEnter
 
   ionViewWillEnter(): void {
     this.mapActive = true;
+    this.startPositionUpdates();
     if (this.map) {
       this.mapLayers.attachMap(this.map);
-      this.scheduleInvalidateSize();
       this.renderPharmacyMarkers(this.pharmacies);
       this.drawRoute(this.currentRoute);
     }
   }
 
+  ionViewDidEnter(): void {
+    if (!this.map) {
+      return;
+    }
+
+    this.cancelInvalidateSize();
+    this.invalidateSizeFrame = requestAnimationFrame(() => {
+      this.map?.invalidateSize({ animate: false });
+      this.invalidateSizeFrame = undefined;
+    });
+  }
+
   ionViewWillLeave(): void {
     this.mapActive = false;
+    this.stopPositionUpdates();
     this.clearPreviewTimer();
+    this.cancelInvalidateSize();
     this.clearPharmacyMarkers();
     this.userMarker?.remove();
     this.userMarker = undefined;
@@ -271,6 +253,7 @@ export class Tab1Page implements OnInit, AfterViewInit, OnDestroy, ViewWillEnter
   }
 
   ngOnDestroy(): void {
+    this.stopPositionUpdates();
     this.subscriptions.unsubscribe();
     if (this.isNavigating) {
       this.navigationFacade.stopNavigation();
@@ -279,9 +262,7 @@ export class Tab1Page implements OnInit, AfterViewInit, OnDestroy, ViewWillEnter
     this.clearPharmacyMarkers();
     this.userMarker?.remove();
     this.userMarker = undefined;
-    if (this.invalidateSizeTimer) {
-      clearTimeout(this.invalidateSizeTimer);
-    }
+    this.cancelInvalidateSize();
     this.mapLayers.detachMap();
     this.map?.remove();
     this.map = undefined;
@@ -437,18 +418,50 @@ export class Tab1Page implements OnInit, AfterViewInit, OnDestroy, ViewWillEnter
 
     this.mapLayers.attachMap(this.map);
     L.control.zoom({ position: 'bottomright' }).addTo(this.map);
-    this.scheduleInvalidateSize();
   }
 
-  private scheduleInvalidateSize(): void {
-    if (this.invalidateSizeTimer) {
-      clearTimeout(this.invalidateSizeTimer);
-    }
+  private startPositionUpdates(): void {
+    this.stopPositionUpdates();
+    this.positionSubscription = combineLatest([
+      this.navigationFacade.currentPosition$,
+      this.pharmacyFacade.userPosition$,
+      this.navigationFacade.navigating$,
+    ])
+      .pipe(
+        throttleTime(this.POSITION_THROTTLE_MS, undefined, { leading: true, trailing: true }),
+        distinctUntilChanged(
+          ([aPos, uPos, aNav], [bPos, bPos2, bNav]) =>
+            aNav === bNav &&
+            aPos?.lat === bPos?.lat &&
+            aPos?.lng === bPos?.lng &&
+            uPos?.lat === bPos2?.lat &&
+            uPos?.lng === bPos2?.lng
+        )
+      )
+      .subscribe(([navPosition, userPosition, navigating]) => {
+        const position = navigating ? navPosition ?? userPosition : userPosition;
+        if (!position) {
+          return;
+        }
 
-    this.invalidateSizeTimer = setTimeout(() => {
-      this.map?.invalidateSize();
-      this.invalidateSizeTimer = undefined;
-    }, 250);
+        this.updateUserMarker(position.lat, position.lng);
+        if (navigating) {
+          this.followUser(position);
+          this.updateTraveledRoute(position);
+        }
+      });
+  }
+
+  private stopPositionUpdates(): void {
+    this.positionSubscription?.unsubscribe();
+    this.positionSubscription = undefined;
+  }
+
+  private cancelInvalidateSize(): void {
+    if (this.invalidateSizeFrame !== undefined) {
+      cancelAnimationFrame(this.invalidateSizeFrame);
+      this.invalidateSizeFrame = undefined;
+    }
   }
 
   private updateUserMarker(lat: number, lng: number): void {
