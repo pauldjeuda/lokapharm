@@ -1,4 +1,13 @@
 :root {
+  // Semantic colours keep text legible on translucent surfaces (WCAG AA).
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+  --color-accent-blue: #1a73e8;
+  --color-accent-green: #16a34a;
+  --color-surface-elevated: rgba(255, 255, 255, 0.92);
+  --border-glass-card: rgba(255, 255, 255, 0.8);
+
   --ion-color-primary: #1a73e8;
   --ion-color-primary-rgb: 26, 115, 232;
   --ion-color-primary-contrast: #ffffff;
@@ -15,5 +24,27 @@
 
   --ion-background-color: transparent;
   --ion-toolbar-background: transparent;
-  --ion-text-color: #1a1a2e;
+  --ion-text-color: var(--text-primary);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text-primary: #f9fafb;
+    --text-secondary: #d1d5db;
+    --text-muted: #9ca3af;
+    --color-surface-elevated: rgba(17, 24, 39, 0.92);
+    --border-glass-card: rgba(255, 255, 255, 0.12);
+    --ion-text-color: var(--text-primary);
+  }
+}
+
+// Allows an application-level theme switch to override the system preference.
+:root.dark,
+body.dark {
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --text-muted: #9ca3af;
+  --color-surface-elevated: rgba(17, 24, 39, 0.92);
+  --border-glass-card: rgba(255, 255, 255, 0.12);
+  --ion-text-color: var(--text-primary);
 }
