@@ -30,3 +30,12 @@ export interface PharmacyDetails extends Pharmacy {
   isOpenNow?: boolean;
   openingHoursSummary?: string;
 }
+
+/** Image displayed when a pharmacy does not provide a usable photo. */
+export const DEFAULT_PHARMACY_PHOTO = 'assets/default-pharma.svg';
+
+/** Returns a pharmacy photo URL or the bundled fallback image. */
+export function getPharmacyPhotoUrl(photoUrl: string | null | undefined): string {
+  const trimmed = photoUrl?.trim();
+  return trimmed ? trimmed : DEFAULT_PHARMACY_PHOTO;
+}
