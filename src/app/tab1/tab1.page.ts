@@ -256,7 +256,6 @@ export class Tab1Page
   }
 
   ngOnDestroy(): void {
- codex/refactoriser-cycle-de-vie-leaflet-et-rxjs
     this.stopPositionUpdates();
     this.subscriptions.unsubscribe();
     if (this.isNavigating) {
