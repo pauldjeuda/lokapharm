@@ -24,6 +24,11 @@ export class MapLayersService {
   readonly settings$ = this.settingsSubject.asObservable();
 
   attachMap(map: L.Map): void {
+    if (this.map === map && this.baseLayer && map.hasLayer(this.baseLayer)) {
+      return;
+    }
+
+    this.clearLayers();
     this.map = map;
     this.applySettings(this.settingsSubject.value);
   }
