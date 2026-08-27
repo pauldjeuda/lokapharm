@@ -1,11 +1,10 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { DEFAULT_PHARMACY_PHOTO, getPharmacyPhotoUrl } from '../../models/pharmacy.model';
+import { DEFAULT_PHARMACY_PHOTO, getPharmacyPhotoUrl } from '../../core/models/pharmacy.model';
 
 /**
- * Affiche `photo_url` ou l'image par défaut (`assets/default-pharma.svg`).
+ * Affiche une URL photo ou l'image par défaut (`assets/default-pharma.svg`).
  *
- * Usage : `{{ pharmacy.photo_url | pharmacyPhoto }}`
- *         `[src]="pharmacy.photos[0] | pharmacyPhoto"`
+ * Usage : `[src]="pharmacy.photos?.[0] | pharmacyPhoto"`
  */
 @Pipe({
   name: 'pharmacyPhoto',

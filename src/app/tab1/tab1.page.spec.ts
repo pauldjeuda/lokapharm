@@ -4,8 +4,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 import { IonicStorageModule } from '@ionic/storage-angular';
 
-import { ExploreContainerComponentModule } from '../explore-container/explore-container.module';
-
 import { Tab1Page } from './tab1.page';
 
 describe('Tab1Page', () => {
@@ -15,7 +13,7 @@ describe('Tab1Page', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [Tab1Page],
-      imports: [IonicModule.forRoot(), IonicStorageModule.forRoot(), ExploreContainerComponentModule],
+      imports: [IonicModule.forRoot(), IonicStorageModule.forRoot()],
       providers: [provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 

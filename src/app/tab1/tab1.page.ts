@@ -16,6 +16,7 @@ import { Pharmacy, PharmacyDetails } from '../core/models/pharmacy.model';
 import { RouteResult } from '../core/models/route.model';
 import { MapViewMode, MapViewSettings } from '../core/models/map-view.model';
 import { GeolocationService } from '../core/services/geolocation.service';
+import { HapticsService } from '../core/services/haptics.service';
 import { PermissionService } from '../core/services/permission.service';
 import { MapLayersService } from '../core/services/map-layers.service';
 import { findClosestRouteIndex } from '../domain/utils/distance.util';
@@ -101,6 +102,7 @@ export class Tab1Page
     private readonly routingFacade: RoutingFacade,
     private readonly navigationFacade: NavigationFacade,
     private readonly geolocation: GeolocationService,
+    private readonly haptics: HapticsService,
     private readonly permissionService: PermissionService,
     private readonly mapLayers: MapLayersService
   ) {}
@@ -154,6 +156,7 @@ export class Tab1Page
     this.subscriptions.add(
       this.navigationFacade.navigating$.subscribe((navigating) => {
         this.isNavigating = navigating;
+        document.body.classList.toggle('navigation-active', navigating);
       })
     );
 
@@ -253,6 +256,7 @@ export class Tab1Page
   }
 
   ngOnDestroy(): void {
+ codex/refactoriser-cycle-de-vie-leaflet-et-rxjs
     this.stopPositionUpdates();
     this.subscriptions.unsubscribe();
     if (this.isNavigating) {
@@ -274,6 +278,10 @@ export class Tab1Page
   }
 
   setFilter(filter: PharmacyFilter): void {
+    if (this.activeFilter !== filter) {
+      void this.haptics.impactLight();
+    }
+
     this.activeFilter = filter;
     this.pharmacyFacade.setFilter(filter);
   }
@@ -382,12 +390,14 @@ export class Tab1Page
             durationSeconds: route.durationSeconds,
           });
           await this.navigationFacade.startNavigation(pharmacy, route);
+          void this.haptics.impactLight();
         },
       });
       return;
     }
 
     await this.navigationFacade.startNavigation(pharmacy, this.currentRoute);
+    void this.haptics.impactLight();
   }
 
   stopNavigation(): void {
@@ -398,7 +408,11 @@ export class Tab1Page
 
   toggleFavorite(pharmacy: Pharmacy, event?: Event): void {
     event?.stopPropagation();
+    const isAddingFavorite = !this.isFavorite(pharmacy);
     this.pharmacyFacade.toggleFavorite(pharmacy);
+    if (isAddingFavorite) {
+      void this.haptics.notifySuccess();
+    }
   }
 
   isFavorite(pharmacy: Pharmacy): boolean {
@@ -523,6 +537,7 @@ export class Tab1Page
   private onMarkerClick(pharmacyId: string): void {
     const pharmacy = this.pharmacies.find((item) => item.id === pharmacyId);
     if (pharmacy) {
+      void this.haptics.impactLight();
       this.selectPharmacy(pharmacy);
     }
   }

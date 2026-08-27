@@ -7,7 +7,8 @@
 .map-container {
   position: absolute;
   inset: 0;
-  z-index: 0;
+  z-index: var(--z-leaflet-map);
+  isolation: isolate;
   transition:
     filter 0.6s var(--ease-fluid),
     transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
@@ -20,7 +21,7 @@
 .map-overlay {
   position: absolute;
   inset: 0;
-  z-index: 500;
+  z-index: var(--z-map-search-overlay);
   pointer-events: none;
   transition: opacity 0.4s var(--ease-fluid);
 
@@ -49,9 +50,9 @@
   --background: var(--glass-bg-strong);
   --border-radius: 28px;
   --box-shadow: var(--glass-shadow);
-  --icon-color: #1a73e8;
-  --placeholder-color: rgba(60, 64, 67, 0.75);
-  --color: #1a1a2e;
+  --icon-color: var(--color-accent-blue);
+  --placeholder-color: var(--text-secondary);
+  --color: var(--text-primary);
   padding: 0;
   backdrop-filter: var(--glass-blur) saturate(160%);
   -webkit-backdrop-filter: var(--glass-blur) saturate(160%);
@@ -89,7 +90,7 @@
   align-items: center;
   justify-content: center;
   gap: 5px;
-  color: #1a1a2e;
+  color: var(--text-primary);
   transition: all 0.3s var(--ease-spring);
 
   &:active {
@@ -116,7 +117,7 @@
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, rgba(26, 115, 232, 0.14), rgba(52, 168, 83, 0.12));
-  color: #1a73e8;
+  color: var(--color-accent-blue);
   flex-shrink: 0;
 
   ion-icon {
@@ -139,6 +140,7 @@
 .fab-stack {
   position: absolute;
   right: 16px;
+  z-index: var(--z-fab-stack);
   pointer-events: auto;
   display: flex;
   flex-direction: column;
@@ -149,7 +151,7 @@
 
 .map-fab {
   --background: var(--glass-bg-strong);
-  --color: #1a73e8;
+  --color: var(--color-accent-blue);
   --box-shadow: var(--glass-shadow);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
@@ -168,6 +170,7 @@
 .pharmacy-sheet {
   --border-radius: 28px 28px 0 0;
   --box-shadow: 0 -8px 48px rgba(31, 38, 135, 0.15);
+  z-index: var(--z-sheet-modal);
 }
 
 .sheet-shell {
@@ -177,6 +180,7 @@
   background: var(--glass-bg-strong);
   backdrop-filter: var(--glass-blur-strong) saturate(160%);
   -webkit-backdrop-filter: var(--glass-blur-strong) saturate(160%);
+  touch-action: pan-y;
 }
 
 .sheet-sticky-header {
@@ -222,7 +226,7 @@
     margin: 0;
     font-size: 1rem;
     font-weight: 800;
-    color: #1a1a2e;
+    color: var(--text-primary);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -232,7 +236,7 @@
   p {
     margin: 2px 0 0;
     font-size: 0.8rem;
-    color: #1a73e8;
+    color: var(--color-accent-blue);
     font-weight: 600;
     white-space: nowrap;
     overflow: hidden;
@@ -247,7 +251,7 @@
   border-radius: 50%;
   background: var(--glass-bg-soft);
   backdrop-filter: blur(12px);
-  color: #1a1a2e;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -273,38 +277,38 @@
     margin: 0;
     font-size: 1.1rem;
     font-weight: 700;
-    color: #1a1a2e;
+    color: var(--text-primary);
     letter-spacing: -0.02em;
   }
 
   p {
     margin: 4px 0 0;
-    color: rgba(60, 64, 67, 0.75);
+    color: var(--text-secondary);
     font-size: 0.82rem;
     line-height: 1.35;
   }
 }
 
 .source-badge {
-  color: #1a73e8;
+  color: var(--color-accent-blue);
   font-weight: 600;
 }
 
 .empty-pharmacies {
   text-align: center;
   padding: 32px 24px 48px;
-  color: rgba(60, 64, 67, 0.75);
+  color: var(--text-secondary);
   animation: glass-fade-in 0.5s var(--ease-fluid) both;
 
   ion-icon {
     font-size: 3rem;
-    color: #1a73e8;
+    color: var(--color-accent-blue);
     margin-bottom: 12px;
   }
 
   h3 {
     margin: 0 0 8px;
-    color: #1a1a2e;
+    color: var(--text-primary);
     font-weight: 700;
   }
 
@@ -333,12 +337,12 @@
   margin: 0;
   font-size: 1rem;
   font-weight: 700;
-  color: #1a1a2e;
+  color: var(--text-primary);
 }
 
 .selected-card-header p {
   margin: 4px 0 0;
-  color: rgba(60, 64, 67, 0.75);
+  color: var(--text-secondary);
   font-size: 0.85rem;
 }
 
@@ -347,7 +351,7 @@
   background: var(--glass-bg-soft);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  color: #1a73e8;
+  color: var(--color-accent-blue);
   font-size: 1.2rem;
   padding: 8px;
   border-radius: 50%;
@@ -370,7 +374,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #1a1a2e;
+  color: var(--text-primary);
   font-weight: 600;
   padding: 10px 14px;
   border-radius: 14px;
@@ -380,13 +384,13 @@
   transition: all 0.3s var(--ease-fluid);
 
   ion-icon {
-    color: #1a73e8;
+    color: var(--color-accent-blue);
     font-size: 1.1rem;
   }
 }
 
 .directions-btn {
-  --background: linear-gradient(135deg, #1a73e8 0%, #4285f4 100%);
+  --background: linear-gradient(135deg, var(--color-accent-blue) 0%, #4285f4 100%);
   --border-radius: 20px;
   --box-shadow: 0 8px 28px rgba(26, 115, 232, 0.4);
   margin-top: 4px;
@@ -445,7 +449,7 @@
   height: 42px;
   border-radius: 14px;
   background: rgba(52, 168, 83, 0.15);
-  color: #34a853;
+  color: var(--color-accent-green);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -457,18 +461,18 @@
 .pharmacy-item h3 {
   font-size: 0.95rem;
   font-weight: 700;
-  color: #1a1a2e;
+  color: var(--text-primary);
 }
 
 .pharmacy-item p {
   font-size: 0.82rem;
-  color: rgba(60, 64, 67, 0.7);
+  color: var(--text-secondary);
 }
 
 .distance-badge {
   font-size: 0.82rem;
   font-weight: 700;
-  color: #1a73e8;
+  color: var(--color-accent-blue);
   white-space: nowrap;
   padding: 6px 12px;
   border-radius: 12px;
@@ -487,7 +491,7 @@
   height: 24px;
   border-radius: 8px;
   background: rgba(26, 115, 232, 0.15);
-  color: #1a73e8;
+  color: var(--color-accent-blue);
   font-size: 0.72rem;
   font-weight: 800;
   display: flex;
@@ -506,8 +510,8 @@
   position: absolute;
   left: 16px;
   right: 16px;
-  bottom: calc(env(safe-area-inset-bottom) + 88px);
-  z-index: 700;
+  bottom: calc(env(safe-area-inset-bottom) + 16px);
+  z-index: var(--z-navigation-panel);
   padding: 20px;
   border-radius: 28px;
   @include glass.glass-surface(24px, 0.92);
@@ -544,13 +548,13 @@
   margin: 4px 0 0;
   font-size: 1.05rem;
   font-weight: 700;
-  color: #1a1a2e;
+  color: var(--text-primary);
 }
 
 .navigation-label {
   margin: 0;
   font-size: 0.72rem;
-  color: #1a73e8;
+  color: var(--color-accent-blue);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -576,7 +580,7 @@
   display: block;
   font-size: 1.6rem;
   font-weight: 800;
-  color: #1a1a2e;
+  color: var(--text-primary);
   letter-spacing: -0.03em;
   transition: all 0.4s var(--ease-fluid);
 }
@@ -585,7 +589,7 @@
   display: block;
   margin-top: 4px;
   font-size: 0.72rem;
-  color: rgba(60, 64, 67, 0.7);
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
@@ -600,8 +604,7 @@
   );
 }
 
-.map-overlay.navigating .search-panel,
-.map-overlay.navigating .fab-stack {
+.map-overlay.navigating .search-panel {
   opacity: 0;
   transform: translateY(-12px);
   pointer-events: none;
@@ -620,7 +623,7 @@
   height: 42px;
   line-height: 42px;
   background: rgba(255, 255, 255, 0.88);
-  color: #1a73e8;
+  color: var(--color-accent-blue);
   border-bottom: 1px solid rgba(26, 115, 232, 0.08);
   backdrop-filter: blur(14px);
 }
@@ -642,7 +645,7 @@
   width: 16px;
   height: 16px;
   border-radius: 50% 50% 50% 0;
-  background: linear-gradient(135deg, #34a853, #4caf50);
+  background: linear-gradient(135deg, var(--color-accent-green), #4caf50);
   border: 2.5px solid rgba(255, 255, 255, 0.9);
   box-shadow: 0 4px 12px rgba(52, 168, 83, 0.4);
   transform: rotate(-45deg);
@@ -651,7 +654,7 @@
 }
 
 :host ::ng-deep .marker-pin.selected {
-  background: linear-gradient(135deg, #1a73e8, #4285f4);
+  background: linear-gradient(135deg, var(--color-accent-blue), #4285f4);
   width: 22px;
   height: 22px;
   box-shadow: 0 6px 20px rgba(26, 115, 232, 0.5);
