@@ -30,7 +30,6 @@
 @import "leaflet/dist/leaflet.css";
 
 :root {
- codex/resoudre-conflit-de-z-index-et-interactions
   // Hiérarchie de calques globale : les couches de la carte restent sous les
   // éléments d'interface qui peuvent recevoir des interactions tactiles.
   --z-leaflet-map: 0;
@@ -41,7 +40,6 @@
   --z-navigation-panel: 60;
   --z-sheet-modal: 70;
   --z-permission-modal: 100;
- main
 }
 
 * {
