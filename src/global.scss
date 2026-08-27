@@ -29,6 +29,12 @@
 
 @import "leaflet/dist/leaflet.css";
 
+:root {
+  --app-tab-bar-height: 64px;
+  --app-tab-bar-bottom-offset: calc(env(safe-area-inset-bottom, 0px) + 12px);
+  --app-content-bottom-safe: calc(var(--app-tab-bar-height) + var(--app-tab-bar-bottom-offset) + 16px);
+}
+
 * {
   -webkit-tap-highlight-color: transparent;
 }
