@@ -68,7 +68,7 @@
   padding: 6px 12px;
   border-radius: 999px;
   background: rgba(52, 168, 83, 0.14);
-  color: #34a853;
+  color: var(--color-accent-green);
   font-size: 0.78rem;
   font-weight: 700;
 }
@@ -79,7 +79,7 @@
   padding: 6px 12px;
   border-radius: 999px;
   background: rgba(26, 115, 232, 0.12);
-  color: #1a73e8;
+  color: var(--color-accent-blue);
   font-size: 0.72rem;
   font-weight: 700;
 }
@@ -88,13 +88,13 @@
   margin: 0;
   font-size: 1.25rem;
   font-weight: 800;
-  color: #1a1a2e;
+  color: var(--text-primary);
   letter-spacing: -0.03em;
 }
 
 .district-line {
   margin: 8px 0 0;
-  color: rgba(30, 30, 46, 0.72);
+  color: var(--text-secondary);
   font-size: 0.92rem;
 }
 
@@ -130,7 +130,7 @@
 
 .distance-chip {
   background: rgba(26, 115, 232, 0.12);
-  color: #1a73e8;
+  color: var(--color-accent-blue);
 }
 
 .action-row {
@@ -151,7 +151,7 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  color: #1a1a2e;
+  color: var(--text-primary);
   font-size: 0.76rem;
   font-weight: 700;
   transition: all 0.3s var(--ease-fluid);
@@ -165,7 +165,7 @@
   }
 
   &.primary {
-    background: linear-gradient(135deg, #1a73e8, #4285f4);
+    background: linear-gradient(135deg, var(--color-accent-blue), #4285f4);
     color: #ffffff;
     border-color: transparent;
     box-shadow: 0 8px 24px rgba(26, 115, 232, 0.28);
@@ -189,7 +189,7 @@
 
   ion-icon {
     font-size: 1.2rem;
-    color: #1a73e8;
+    color: var(--color-accent-blue);
     margin-top: 2px;
     flex-shrink: 0;
   }
@@ -200,18 +200,18 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: rgba(30, 30, 46, 0.55);
+    color: var(--text-muted);
     margin-bottom: 4px;
   }
 
   p {
     margin: 0;
-    color: #1a1a2e;
+    color: var(--text-primary);
     line-height: 1.45;
     font-size: 0.92rem;
 
     &.pending {
-      color: rgba(30, 30, 46, 0.55);
+      color: var(--text-muted);
       font-style: italic;
     }
   }
@@ -219,7 +219,7 @@
   .coords-hint {
     margin-top: 6px;
     font-size: 0.8rem;
-    color: rgba(30, 30, 46, 0.62);
+    color: var(--text-secondary);
   }
 }
 
@@ -239,7 +239,7 @@
 
   p {
     margin: 0;
-    color: rgba(30, 30, 46, 0.72);
+    color: var(--text-secondary);
     font-size: 0.9rem;
     text-align: center;
     padding: 0 24px;

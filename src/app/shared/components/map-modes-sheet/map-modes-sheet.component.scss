@@ -137,7 +137,7 @@
     position: absolute;
     inset: 28% 18%;
     background:
-      linear-gradient(90deg, transparent 42%, #34a853 42%, #34a853 46%, transparent 46%),
+      linear-gradient(90deg, transparent 42%, var(--color-accent-green) 42%, var(--color-accent-green) 46%, transparent 46%),
       linear-gradient(0deg, transparent 58%, #fbbc04 58%, #fbbc04 62%, transparent 62%);
   }
 }
@@ -189,6 +189,6 @@
 
 ion-toggle {
   --track-background: rgba(255, 255, 255, 0.18);
-  --track-background-checked: #34a853;
+  --track-background-checked: var(--color-accent-green);
   --handle-background: #ffffff;
 }

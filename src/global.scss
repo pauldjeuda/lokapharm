@@ -39,6 +39,21 @@ ion-app {
   font-family: "Plus Jakarta Sans", "SF Pro Display", Roboto, "Helvetica Neue", sans-serif;
   background: linear-gradient(135deg, #e8f0fe 0%, #f0f4ff 40%, #e6f4ea 100%);
   min-height: 100%;
+  color: var(--text-primary);
+}
+
+@media (prefers-color-scheme: dark) {
+  body,
+  ion-app {
+    background: linear-gradient(135deg, #0b0f19 0%, #111827 50%, #064e3b 100%);
+  }
+}
+
+:root.dark body,
+:root.dark ion-app,
+body.dark,
+body.dark ion-app {
+  background: linear-gradient(135deg, #0b0f19 0%, #111827 50%, #064e3b 100%);
 }
 
 ion-content {
@@ -139,7 +154,7 @@ ion-fab-button:active::part(native) {
 .glass-header ion-title {
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: #1a1a2e;
+  color: var(--text-primary);
 }
 
 .app-logo {
