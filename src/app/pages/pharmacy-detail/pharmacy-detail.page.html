@@ -1,0 +1,99 @@
+<ion-content [fullscreen]="true" class="detail-page" *ngIf="pharmacy as p">
+  <div class="hero">
+    <img [src]="photo" [alt]="p.name" />
+    <div class="hero-actions">
+      <button type="button" class="chrome" (click)="goBack()" aria-label="Retour">
+        <ion-icon name="arrow-back"></ion-icon>
+      </button>
+      <img src="assets/icon/Lokapharm-logo.png" alt="" class="mini-logo" />
+      <button type="button" class="chrome" (click)="toggleFavorite()" aria-label="Favori">
+        <ion-icon [name]="isFavorite ? 'heart' : 'heart-outline'" [color]="isFavorite ? 'danger' : undefined"></ion-icon>
+      </button>
+    </div>
+  </div>
+
+  <main class="sheet">
+    <div class="title-row">
+      <div>
+        <h1>{{ p.name }}</h1>
+        <p class="addr"><ion-icon name="location-outline"></ion-icon> {{ addressLine() }}</p>
+      </div>
+      <div class="on-call" *ngIf="p.isOnCall">
+        <span>De garde</span>
+        <ion-icon name="medical"></ion-icon>
+      </div>
+    </div>
+
+    <section class="hours-card" (click)="toggleHours()">
+      <div class="hours-head">
+        <ion-icon name="time-outline" color="secondary"></ion-icon>
+        <div>
+          <strong>{{ openLabel }}</strong>
+          <p>{{ openSub }}</p>
+        </div>
+        <ion-icon [name]="hoursOpen ? 'chevron-up' : 'chevron-down'"></ion-icon>
+      </div>
+      <div class="hours-body" *ngIf="hoursOpen">
+        <p>{{ p.openingHours || 'Horaires non renseignés dans les données disponibles.' }}</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Emplacement</h2>
+      <div class="map-card">
+        <div class="mini-map">
+          <ion-icon name="location" color="secondary"></ion-icon>
+          <span>{{ p.lat | number:'1.4-4' }}, {{ p.lng | number:'1.4-4' }}</span>
+        </div>
+        <div class="map-meta">
+          <p>{{ p.address || addressLine() }}</p>
+          <div class="meta-right" *ngIf="p.distanceMeters != null">
+            <strong>{{ p.distanceMeters | distance }}</strong>
+            <span *ngIf="p.durationSeconds">{{ p.durationSeconds | duration }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Informations pratiques</h2>
+      <div class="info-grid">
+        <div class="info-tile" *ngIf="p.wheelchair === 'yes'">
+          <ion-icon name="accessibility-outline"></ion-icon>
+          <span>Accès PMR</span>
+        </div>
+        <div class="info-tile" *ngIf="p.phone">
+          <ion-icon name="call-outline"></ion-icon>
+          <span>Téléphone</span>
+        </div>
+        <div class="info-tile" *ngIf="p.website">
+          <ion-icon name="globe-outline"></ion-icon>
+          <span>Site web</span>
+        </div>
+        <div class="info-tile" *ngIf="p.isOpen24h">
+          <ion-icon name="moon-outline"></ion-icon>
+          <span>Ouvert 24/7</span>
+        </div>
+        <div class="info-tile" *ngIf="!p.wheelchair && !p.website && !p.isOpen24h">
+          <ion-icon name="information-circle-outline"></ion-icon>
+          <span>Infos limitées</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="loading" *ngIf="loading">
+      <ion-spinner name="crescent"></ion-spinner>
+      <span>Enrichissement des détails…</span>
+    </div>
+  </main>
+
+  <div class="cta-bar">
+    <button type="button" class="loka-btn-ghost" [disabled]="!p.phone" (click)="call()">
+      <ion-icon name="call-outline"></ion-icon> Appeler
+    </button>
+    <button type="button" class="loka-btn-primary" [disabled]="routeLoading" (click)="goRoute()">
+      <ion-icon name="navigate-outline"></ion-icon>
+      {{ routeLoading ? 'Calcul…' : 'Itinéraire' }}
+    </button>
+  </div>
+</ion-content>

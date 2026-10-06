@@ -1,0 +1,51 @@
+<div class="route-page">
+  <header class="top">
+    <button type="button" class="chrome" (click)="goBack()"><ion-icon name="arrow-back"></ion-icon></button>
+    <img src="assets/icon/Lokapharm-logo.png" alt="" class="logo" />
+    <div class="modes">
+      <button type="button" [class.active]="profile === 'driving'" (click)="setProfile('driving')">
+        <ion-icon name="car-outline"></ion-icon>
+      </button>
+      <button type="button" [class.active]="profile === 'foot'" (click)="setProfile('foot')">
+        <ion-icon name="walk-outline"></ion-icon>
+      </button>
+    </div>
+  </header>
+
+  <div class="map-placeholder">
+    <div class="route-line"></div>
+    <p *ngIf="loading">Calcul de l’itinéraire…</p>
+    <p *ngIf="!loading && route">
+      {{ route.distanceMeters | distance }} · {{ route.durationSeconds | duration }}
+    </p>
+  </div>
+
+  <section class="sheet">
+    <div class="handle"></div>
+    <div class="head">
+      <div>
+        <h1>{{ pharmacy?.name || 'Itinéraire' }}</h1>
+        <p class="status" *ngIf="pharmacy?.isOpenNow">Ouvert maintenant</p>
+      </div>
+    </div>
+
+    <ul class="steps">
+      <li *ngFor="let step of steps; let i = index">
+        <span class="num">{{ i + 1 }}</span>
+        <div>
+          <strong>{{ step.instruction }}</strong>
+          <p *ngIf="step.distanceMeters">{{ step.distanceMeters | distance }}</p>
+        </div>
+      </li>
+    </ul>
+
+    <button
+      type="button"
+      class="loka-btn-primary full"
+      [disabled]="!route || loading"
+      (click)="startNavigation()"
+    >
+      Démarrer la navigation
+    </button>
+  </section>
+</div>

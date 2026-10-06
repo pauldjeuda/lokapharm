@@ -1,0 +1,7 @@
+{
+  "name": "Lokapharm",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

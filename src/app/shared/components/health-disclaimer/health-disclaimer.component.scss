@@ -1,0 +1,32 @@
+.disclaimer-card {
+  padding: 28px 24px 24px;
+  text-align: center;
+  background: var(--loka-surface-container-lowest, #fff);
+}
+
+h2 {
+  margin: 8px 0 12px;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--loka-primary, #001624);
+}
+
+p {
+  margin: 0 0 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--loka-on-surface-variant, #42474c);
+  text-align: left;
+}
+
+.note {
+  margin-bottom: 24px;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(148, 74, 0, 0.08);
+  color: var(--loka-on-secondary-container, #663100);
+}
+
+.full {
+  width: 100%;
+}

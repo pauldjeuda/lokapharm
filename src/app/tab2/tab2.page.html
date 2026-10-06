@@ -1,0 +1,113 @@
+<header class="list-topbar">
+  <div class="list-topbar__brand">
+    <img src="assets/icon/Lokapharm-logo.png" alt="Lokapharm" class="app-logo app-logo--sm" />
+    <h1>Lokapharm</h1>
+  </div>
+  <button type="button" class="icon-btn" aria-label="Recherche" (click)="showSearch = !showSearch">
+    <ion-icon name="search"></ion-icon>
+  </button>
+</header>
+
+<ion-content [fullscreen]="true" class="list-content">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="list-body">
+    <section class="discovery" *ngIf="showSearch">
+      <div class="loka-search-bar">
+        <ion-icon name="search" color="medium"></ion-icon>
+        <input
+          type="search"
+          placeholder="Rechercher une pharmacie, un quartier..."
+          [value]="searchQuery"
+          (input)="onSearchChange($any($event.target).value)"
+        />
+        <button type="button" class="icon-btn" aria-label="Filtres">
+          <ion-icon name="options-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="chips-row hide-scrollbar">
+        <button
+          type="button"
+          class="loka-chip"
+          *ngFor="let chip of chips"
+          [class.active]="activeChip === chip.id"
+          (click)="setChip(chip.id)"
+        >
+          {{ chip.label }}
+        </button>
+      </div>
+    </section>
+
+    <!-- Skeleton loading -->
+    <section class="pharmacy-list" *ngIf="loading && !pharmacies.length">
+      <article class="pharmacy-card skeleton" *ngFor="let _ of [1, 2, 3, 4]">
+        <div class="skel skel-title"></div>
+        <div class="skel skel-line"></div>
+        <div class="skel skel-line short"></div>
+        <div class="skel-actions">
+          <div class="skel skel-btn"></div>
+          <div class="skel skel-btn"></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="pharmacy-list" *ngIf="pharmacies.length">
+      <article
+        class="pharmacy-card"
+        *ngFor="let pharmacy of pharmacies; trackBy: trackById"
+        [class.pharmacy-card--closed]="isOpen(pharmacy) === false"
+        (click)="openPharmacy(pharmacy)"
+      >
+        <div class="pharmacy-card__badges">
+          <span class="loka-badge loka-badge--on-call-orange" *ngIf="isOnCall(pharmacy)">
+            <span class="dot"></span> De garde
+          </span>
+          <span class="loka-badge loka-badge--open" *ngIf="isOpen(pharmacy) === true">Ouvert</span>
+          <span class="loka-badge loka-badge--closed" *ngIf="isOpen(pharmacy) === false">Fermé</span>
+        </div>
+
+        <div class="pharmacy-card__body">
+          <h2 class="loka-headline-sm">{{ pharmacy.name }}</h2>
+          <p class="meta">
+            <ion-icon name="location-outline"></ion-icon>
+            {{ addressLine(pharmacy) }}
+          </p>
+          <p class="meta muted" *ngIf="pharmacy.distanceMeters != null">
+            <ion-icon name="walk-outline"></ion-icon>
+            {{ pharmacy.distanceMeters | distance }}
+            <span *ngIf="pharmacy.durationSeconds"> · {{ pharmacy.durationSeconds | duration }}</span>
+          </p>
+        </div>
+
+        <div class="pharmacy-card__actions" *ngIf="isOpen(pharmacy) !== false">
+          <button
+            type="button"
+            class="loka-btn-ghost"
+            [disabled]="!pharmacy.phone"
+            (click)="callPharmacy(pharmacy, $event)"
+          >
+            <ion-icon name="call-outline"></ion-icon>
+            Appeler
+          </button>
+          <button type="button" class="loka-btn-navy" (click)="goDirections(pharmacy, $event)">
+            <ion-icon name="navigate-outline"></ion-icon>
+            Y aller
+          </button>
+        </div>
+
+        <p class="closed-hint" *ngIf="isOpen(pharmacy) === false">
+          {{ pharmacy.openingHours ? 'Horaires : ' + pharmacy.openingHours : 'Horaires non renseignés' }}
+        </p>
+      </article>
+    </section>
+
+    <div class="empty-state" *ngIf="!loading && !pharmacies.length">
+      <img src="assets/icon/Lokapharm-logo.png" alt="" class="app-logo app-logo--md" />
+      <h2>Aucune pharmacie</h2>
+      <p>Élargissez votre recherche ou activez la localisation.</p>
+    </div>
+  </div>
+</ion-content>

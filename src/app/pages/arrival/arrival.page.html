@@ -1,0 +1,26 @@
+<div class="arrival">
+  <img src="assets/icon/Lokapharm-logo.png" alt="" class="app-logo app-logo--md pop" />
+  <h1>Vous êtes arrivé !</h1>
+  <p class="name">{{ pharmacy?.name }}</p>
+
+  <div class="stats">
+    <div>
+      <strong>{{ distance | distance }}</strong>
+      <span>Distance</span>
+    </div>
+    <div>
+      <strong>{{ duration | duration }}</strong>
+      <span>Durée</span>
+    </div>
+    <div>
+      <strong>{{ now }}</strong>
+      <span>Arrivée</span>
+    </div>
+  </div>
+
+  <button type="button" class="loka-btn-primary full" (click)="leaveReview()">Laisser un avis</button>
+  <button type="button" class="loka-btn-ghost full" (click)="toggleFavorite()">
+    {{ isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris' }}
+  </button>
+  <button type="button" class="link" (click)="backToMap()">Retour à la carte</button>
+</div>

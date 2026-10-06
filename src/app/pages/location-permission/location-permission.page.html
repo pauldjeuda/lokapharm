@@ -1,0 +1,15 @@
+<div class="perm-page">
+  <div class="perm-card">
+    <img src="assets/icon/Lokapharm-logo.png" alt="LokaPharm" class="app-logo app-logo--md" />
+    <h1>Pourquoi nous avons besoin de votre position</h1>
+    <p>
+      LokaPharm utilise votre localisation pour afficher les pharmacies à proximité,
+      calculer les distances et vous guider. Vous pouvez continuer sans localisation
+      et rechercher par ville.
+    </p>
+    <button type="button" class="loka-btn-primary full" [disabled]="loading" (click)="enable()">
+      {{ loading ? 'Activation…' : 'Activer la localisation' }}
+    </button>
+    <button type="button" class="link-btn" (click)="skip()">Continuer sans localisation</button>
+  </div>
+</div>

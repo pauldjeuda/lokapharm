@@ -1,0 +1,375 @@
+/*
+ * App Global CSS — LokaPharm / Loka Health
+ */
+
+@use "theme/glass";
+
+@import "@ionic/angular/css/core.css";
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+@import "leaflet/dist/leaflet.css";
+
+:root {
+  --z-leaflet-map: 0;
+  --z-leaflet-controls: 10;
+  --z-map-search-overlay: 20;
+  --z-fab-stack: 30;
+  --z-tab-bar: 50;
+  --z-navigation-panel: 60;
+  --z-sheet-modal: 70;
+  --z-permission-modal: 100;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body,
+ion-app {
+  font-family: var(--loka-font);
+  background: var(--loka-background);
+  min-height: 100%;
+  color: var(--loka-on-surface);
+}
+
+ion-content {
+  --background: var(--loka-background);
+}
+
+ion-toolbar {
+  --background: var(--loka-surface-container-lowest);
+  --border-width: 0;
+  --color: var(--loka-primary);
+}
+
+ion-button {
+  --transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: none;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+ion-button::part(native) {
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.28s ease;
+}
+
+ion-button:active::part(native) {
+  transform: scale(0.98);
+}
+
+.leaflet-container {
+  z-index: var(--z-leaflet-map);
+}
+
+.leaflet-top,
+.leaflet-bottom {
+  z-index: var(--z-leaflet-controls) !important;
+}
+
+ion-tab-bar {
+  z-index: var(--z-tab-bar);
+}
+
+ion-modal.pharmacy-sheet,
+ion-modal.map-modes-modal,
+ion-modal.filters-sheet,
+ion-modal.call-confirm-modal,
+ion-modal.remove-favorite-modal {
+  z-index: var(--z-sheet-modal) !important;
+}
+
+ion-modal.pharmacy-sheet::part(content) {
+  pointer-events: auto;
+  touch-action: pan-y;
+}
+
+body.navigation-active ion-tab-bar {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(calc(100% + env(safe-area-inset-bottom) + 16px));
+}
+
+ion-modal::part(handle) {
+  background: var(--loka-outline-variant);
+  width: 40px;
+  height: 4px;
+  border-radius: 999px;
+}
+
+/* Typographie Loka */
+.loka-headline-md {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+  color: var(--loka-on-surface);
+}
+
+.loka-headline-sm {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 600;
+  color: var(--loka-on-surface);
+}
+
+.loka-body-md {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+}
+
+.loka-body-lg {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+}
+
+.loka-label-md {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+/* Badges statut */
+.loka-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 12px;
+  border-radius: var(--loka-radius-sm);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.loka-badge--on-call {
+  background: rgba(22, 165, 88, 0.1);
+  color: var(--loka-on-tertiary-container);
+  border: 1px solid rgba(22, 165, 88, 0.2);
+}
+
+.loka-badge--on-call-orange {
+  background: rgba(148, 74, 0, 0.1);
+  color: var(--loka-secondary);
+}
+
+.loka-badge--open {
+  color: var(--loka-tertiary-container);
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  background: transparent;
+  padding: 0;
+}
+
+.loka-badge--closed {
+  color: var(--loka-error);
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  background: transparent;
+  padding: 0;
+}
+
+/* Boutons CTA Stitch */
+.loka-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--loka-secondary);
+  color: var(--loka-on-secondary);
+  border: none;
+  border-radius: var(--loka-radius-full);
+  padding: 12px 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  box-shadow: var(--loka-shadow-2);
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.loka-btn-primary:active {
+  transform: scale(0.98);
+}
+
+.loka-btn-navy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--loka-primary-container);
+  color: var(--loka-on-primary);
+  border: none;
+  border-radius: var(--loka-radius-full);
+  padding: 12px 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  box-shadow: var(--loka-shadow-2);
+  cursor: pointer;
+}
+
+.loka-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--loka-surface-container-low);
+  color: var(--loka-primary-container);
+  border: none;
+  border-radius: var(--loka-radius-full);
+  padding: 12px 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+
+.loka-chip {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: var(--loka-radius-sm);
+  border: 1px solid var(--loka-primary-container);
+  background: var(--loka-surface-container-lowest);
+  color: var(--loka-primary-container);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.loka-chip.active {
+  background: var(--loka-primary-container);
+  color: var(--loka-on-primary);
+  border-color: var(--loka-primary-container);
+}
+
+.loka-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--loka-surface-container-lowest);
+  border-radius: var(--loka-radius-md);
+  padding: 12px 16px;
+  box-shadow: var(--loka-shadow-2);
+}
+
+.loka-search-bar input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--loka-on-surface);
+  font-family: inherit;
+}
+
+.loka-search-bar input::placeholder {
+  color: rgba(66, 71, 76, 0.7);
+}
+
+.loka-card {
+  background: var(--loka-surface-container-lowest);
+  border-radius: var(--loka-radius-md);
+  padding: 16px;
+  box-shadow: var(--loka-shadow-1);
+}
+
+.app-logo {
+  display: block;
+  object-fit: contain;
+}
+
+.app-logo--sm {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.app-logo--md {
+  width: 88px;
+  height: 88px;
+  border-radius: 20px;
+  margin: 0 auto 16px;
+}
+
+.app-logo--lg {
+  width: 112px;
+  height: 112px;
+  border-radius: 24px;
+}
+
+ion-modal.location-permission-modal {
+  --width: min(92vw, 380px);
+  --height: auto;
+  --max-height: 85vh;
+  --border-radius: 12px;
+  --box-shadow: var(--loka-shadow-3);
+  --backdrop-opacity: 0.4;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-permission-modal) !important;
+}
+
+ion-modal.location-permission-modal::part(backdrop) {
+  background: rgba(0, 22, 36, 0.4);
+  backdrop-filter: blur(12px);
+}
+
+ion-modal.call-confirm-modal {
+  --width: min(92vw, 360px);
+  --height: auto;
+  --border-radius: 12px;
+  --backdrop-opacity: 0.4;
+  align-items: center;
+  justify-content: center;
+}
+
+ion-modal.call-confirm-modal::part(backdrop) {
+  background: rgba(0, 22, 36, 0.4);
+  backdrop-filter: blur(8px);
+}
+
+ion-modal.filters-sheet {
+  z-index: var(--z-sheet-modal) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}

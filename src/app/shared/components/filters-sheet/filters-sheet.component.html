@@ -1,0 +1,40 @@
+<div class="filters-overlay" *ngIf="open" (click)="closed.emit()">
+  <div class="filters-sheet" (click)="$event.stopPropagation()">
+    <div class="handle"></div>
+    <h2>Filtres</h2>
+
+    <section>
+      <h3>Statut</h3>
+      <div class="chips">
+        <button type="button" class="loka-chip" [class.active]="!draft.onCall && !draft.open24h" (click)="reset()">Toutes</button>
+        <button type="button" class="loka-chip" [class.active]="draft.onCall" (click)="toggleOnCall()">De garde</button>
+        <button type="button" class="loka-chip" [class.active]="draft.open24h" (click)="toggle24h()">Ouvert 24/7</button>
+      </div>
+    </section>
+
+    <section>
+      <h3>Distance</h3>
+      <div class="chips">
+        <button type="button" class="loka-chip" [class.active]="draft.maxDistanceKm === 1" (click)="setDistance(1)">1 km</button>
+        <button type="button" class="loka-chip" [class.active]="draft.maxDistanceKm === 3" (click)="setDistance(3)">3 km</button>
+        <button type="button" class="loka-chip" [class.active]="draft.maxDistanceKm === 5" (click)="setDistance(5)">5 km</button>
+        <button type="button" class="loka-chip" [class.active]="draft.maxDistanceKm === 10" (click)="setDistance(10)">10 km</button>
+        <button type="button" class="loka-chip" [class.active]="draft.maxDistanceKm == null" (click)="setDistance(null)">Toutes</button>
+      </div>
+    </section>
+
+    <section>
+      <h3>Trier par</h3>
+      <div class="chips">
+        <button type="button" class="loka-chip" [class.active]="draft.sortBy === 'distance'" (click)="setSort('distance')">Distance</button>
+        <button type="button" class="loka-chip" [class.active]="draft.sortBy === 'name'" (click)="setSort('name')">Nom</button>
+        <button type="button" class="loka-chip" [class.active]="draft.sortBy === 'status'" (click)="setSort('status')">Statut</button>
+      </div>
+    </section>
+
+    <footer>
+      <button type="button" class="loka-btn-ghost" (click)="reset()">Réinitialiser</button>
+      <button type="button" class="loka-btn-primary" (click)="apply()">Appliquer</button>
+    </footer>
+  </div>
+</div>

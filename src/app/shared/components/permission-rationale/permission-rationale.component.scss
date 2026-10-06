@@ -1,0 +1,62 @@
+.permission-dialog {
+  padding: 1.5rem 1.25rem 1.25rem;
+  background: #ffffff;
+  text-align: center;
+}
+
+.permission-dialog-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 1rem;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(26, 115, 232, 0.14), rgba(52, 168, 83, 0.12));
+  color: var(--color-accent-blue);
+
+  ion-icon {
+    font-size: 1.75rem;
+  }
+}
+
+.permission-dialog-title {
+  margin: 0 0 0.75rem;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.permission-dialog-text {
+  margin: 0 0 1.25rem;
+  line-height: 1.55;
+  font-size: 0.92rem;
+  color: rgba(26, 26, 46, 0.82);
+  text-align: left;
+}
+
+.permission-rationale-actions {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.accept-btn {
+  --background: linear-gradient(135deg, var(--color-accent-blue) 0%, #4285f4 100%);
+  --box-shadow: 0 8px 24px rgba(26, 115, 232, 0.28);
+  font-weight: 700;
+}
+
+@media (prefers-color-scheme: dark) {
+  .permission-dialog {
+    background: #2a2d35;
+  }
+
+  .permission-dialog-title {
+    color: #f5f5f7;
+  }
+
+  .permission-dialog-text {
+    color: rgba(245, 245, 247, 0.88);
+  }
+}

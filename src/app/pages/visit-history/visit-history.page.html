@@ -1,0 +1,36 @@
+<header class="topbar">
+  <button type="button" class="back" (click)="goBack()"><ion-icon name="arrow-back"></ion-icon></button>
+  <h1>Mes Visites</h1>
+  <img src="assets/icon/Lokapharm-logo.png" alt="" class="app-logo app-logo--sm" />
+</header>
+
+<ion-content [fullscreen]="true">
+  <div class="body">
+    <p class="intro">Consultez vos dernières visites enregistrées sur cet appareil.</p>
+
+    <div class="empty" *ngIf="!visits.length">
+      <p>Aucune visite pour le moment. Terminez une navigation pour en enregistrer une.</p>
+    </div>
+
+    <article class="visit-card" *ngFor="let visit of visits">
+      <img [src]="photo(visit)" [alt]="visit.pharmacyName" />
+      <div class="info">
+        <h2>{{ visit.pharmacyName }}</h2>
+        <p>{{ visit.address || visit.city }}</p>
+        <p class="date">{{ formatDate(visit.visitedAt) }}</p>
+        <div class="actions">
+          <button type="button" class="loka-btn-ghost" (click)="openDetails(visit)">Détails</button>
+          <button
+            type="button"
+            class="loka-btn-navy"
+            *ngIf="!visit.hasReview"
+            (click)="markReview(visit)"
+          >
+            Laisser un avis
+          </button>
+          <span class="done" *ngIf="visit.hasReview">Avis laissé</span>
+        </div>
+      </div>
+    </article>
+  </div>
+</ion-content>

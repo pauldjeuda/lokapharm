@@ -1,0 +1,156 @@
+[
+  {
+    "id": "cm-yde-001",
+    "name": "Pharmacie du Centre Administratif",
+    "phone": "+237 222 22 33 44",
+    "city": "Yaoundé",
+    "openingHours": "Lun-Sam 07:30-20:00; Dim 09:00-13:00",
+    "district": "Centre Administratif",
+    "lat": 3.848,
+    "lng": 11.5021,
+    "photos": []
+  },
+  {
+    "id": "cm-yde-002",
+    "name": "Pharmacie Bastos",
+    "phone": "+237 222 20 15 60",
+    "city": "Yaoundé",
+    "openingHours": "Lun-Sam 08:00-21:00",
+    "district": "Bastos",
+    "lat": 3.8712,
+    "lng": 11.5184,
+    "photos": []
+  },
+  {
+    "id": "cm-yde-003",
+    "name": "Pharmacie Essos",
+    "phone": "+237 222 26 48 12",
+    "city": "Yaoundé",
+    "openingHours": "Lun-Sam 07:00-20:00",
+    "district": "Essos",
+    "lat": 3.8725,
+    "lng": 11.534,
+    "photos": []
+  },
+  {
+    "id": "cm-yde-004",
+    "name": "Pharmacie Mvog-Ada",
+    "phone": "+237 222 23 11 09",
+    "city": "Yaoundé",
+    "openingHours": "Lun-Sam 07:00-19:30",
+    "district": "Mvog-Ada",
+    "lat": 3.8382,
+    "lng": 11.5281,
+    "photos": []
+  },
+  {
+    "id": "cm-yde-005",
+    "name": "Pharmacie Elig-Essono",
+    "phone": "+237 222 25 77 33",
+    "city": "Yaoundé",
+    "openingHours": "Lun-Sam 08:00-20:00",
+    "district": "Elig-Essono",
+    "lat": 3.861,
+    "lng": 11.545,
+    "photos": []
+  },
+  {
+    "id": "cm-yde-006",
+    "name": "Pharmacie Nlongkak",
+    "phone": "+237 222 22 90 45",
+    "city": "Yaoundé",
+    "openingHours": "Lun-Sam 08:00-19:00",
+    "district": "Nlongkak",
+    "lat": 3.8755,
+    "lng": 11.5088,
+    "photos": []
+  },
+  {
+    "id": "cm-yde-007",
+    "name": "Pharmacie Mvan",
+    "phone": "+237 222 29 14 22",
+    "city": "Yaoundé",
+    "openingHours": "Lun-Sam 07:30-20:30",
+    "district": "Mvan",
+    "lat": 3.812,
+    "lng": 11.489,
+    "photos": []
+  },
+  {
+    "id": "cm-yde-008",
+    "name": "Pharmacie Obili",
+    "phone": "+237 222 23 55 18",
+    "city": "Yaoundé",
+    "openingHours": "Lun-Sam 08:00-20:00",
+    "district": "Obili",
+    "lat": 3.8345,
+    "lng": 11.512,
+    "photos": []
+  },
+  {
+    "id": "cm-dla-001",
+    "name": "Pharmacie Akwa",
+    "phone": "+237 233 42 10 10",
+    "city": "Douala",
+    "openingHours": "Lun-Sam 08:00-22:00",
+    "district": "Akwa",
+    "lat": 4.0512,
+    "lng": 9.708,
+    "photos": []
+  },
+  {
+    "id": "cm-dla-002",
+    "name": "Pharmacie Bonanjo",
+    "phone": "+237 233 42 25 60",
+    "city": "Douala",
+    "openingHours": "Lun-Sam 08:00-20:00",
+    "district": "Bonanjo",
+    "lat": 4.045,
+    "lng": 9.7012,
+    "photos": []
+  },
+  {
+    "id": "cm-dla-003",
+    "name": "Pharmacie Deido",
+    "phone": "+237 233 36 18 44",
+    "city": "Douala",
+    "openingHours": "Lun-Sam 07:30-20:00",
+    "district": "Deido",
+    "lat": 4.068,
+    "lng": 9.712,
+    "photos": []
+  },
+  {
+    "id": "cm-dla-004",
+    "name": "Pharmacie Bonapriso",
+    "phone": "+237 233 43 55 77",
+    "city": "Douala",
+    "openingHours": "Lun-Sam 08:00-21:00",
+    "district": "Bonapriso",
+    "lat": 4.028,
+    "lng": 9.695,
+    "photos": []
+  },
+  {
+    "id": "cm-dla-005",
+    "name": "Pharmacie Makepe",
+    "phone": "+237 233 39 22 11",
+    "city": "Douala",
+    "openingHours": "Lun-Sam 07:00-20:00",
+    "district": "Makepe",
+    "lat": 4.082,
+    "lng": 9.738,
+    "photos": []
+  },
+  {
+    "id": "cm-dla-006",
+    "name": "Pharmacie New-Bell",
+    "phone": "+237 233 37 44 90",
+    "city": "Douala",
+    "openingHours": "Lun-Sam 08:00-19:30",
+    "district": "New-Bell",
+    "lat": 4.058,
+    "lng": 9.728,
+    "photos": []
+  }
+]

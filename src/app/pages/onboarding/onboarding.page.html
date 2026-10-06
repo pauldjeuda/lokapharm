@@ -1,0 +1,32 @@
+<div class="onboarding">
+  <div class="onboarding__bg" aria-hidden="true">
+    <div class="map-pattern"></div>
+    <div class="onboarding__fade"></div>
+  </div>
+
+  <header class="onboarding__header">
+    <div class="spacer"></div>
+    <img src="assets/icon/Lokapharm-logo.png" alt="LokaPharm" class="logo" />
+    <button type="button" class="skip" (click)="skip()">Passer</button>
+  </header>
+
+  <div class="onboarding__spacer"></div>
+
+  <main class="onboarding__main">
+    <div class="slides">
+      <div class="slide" *ngFor="let slide of slides; let i = index" [class.active]="i === index">
+        <h2>{{ slide.title }}</h2>
+        <p>{{ slide.text }}</p>
+      </div>
+    </div>
+
+    <div class="dots">
+      <span *ngFor="let _ of slides; let i = index" [class.active]="i === index"></span>
+    </div>
+
+    <button type="button" class="loka-btn-primary full" (click)="next()">
+      {{ isLast ? 'Commencer' : 'Suivant' }}
+      <ion-icon [name]="isLast ? 'checkmark' : 'arrow-forward'"></ion-icon>
+    </button>
+  </main>
+</div>

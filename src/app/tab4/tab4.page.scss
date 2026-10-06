@@ -1,0 +1,141 @@
+.profile-topbar {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  padding-top: calc(8px + env(safe-area-inset-top));
+  background: var(--loka-surface-container-lowest);
+  box-shadow: 0 2px 8px rgba(13, 43, 62, 0.06);
+}
+
+.profile-topbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--loka-primary);
+}
+
+.profile-content {
+  --background: var(--loka-background);
+}
+
+.profile-body {
+  max-width: 672px;
+  margin: 0 auto;
+  padding: 24px 16px calc(var(--app-tab-bar-height) + 24px);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  h1 {
+    margin: 0 0 4px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--loka-on-surface-variant);
+  }
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--loka-primary-container);
+  color: var(--loka-on-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.section-title {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--loka-outline);
+}
+
+.settings-section {
+  background: var(--loka-surface-container-lowest);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: var(--loka-shadow-1);
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 0;
+  border: none;
+  background: transparent;
+  border-bottom: 1px solid var(--loka-surface-container);
+  color: var(--loka-on-surface);
+  font: inherit;
+  text-align: left;
+
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  &:first-of-type {
+    padding-top: 4px;
+  }
+
+  &.clickable {
+    cursor: pointer;
+
+    &:active {
+      opacity: 0.7;
+    }
+  }
+}
+
+.settings-row__label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  font-weight: 500;
+
+  ion-icon {
+    font-size: 22px;
+    color: var(--loka-primary-container);
+  }
+}
+
+.settings-row__value {
+  font-size: 14px;
+  color: var(--loka-on-surface-variant);
+}
+
+.version {
+  text-align: center;
+  margin: 0;
+  font-size: 12px;
+  color: var(--loka-outline);
+}
+
+.disclaimer {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--loka-on-surface-variant);
+  text-align: center;
+}

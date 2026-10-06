@@ -1,0 +1,58 @@
+<header class="fav-topbar">
+  <div class="fav-topbar__brand">
+    <img src="assets/icon/Lokapharm-logo.png" alt="Lokapharm" class="app-logo app-logo--sm" />
+    <span class="brand-name">Lokapharm</span>
+  </div>
+</header>
+
+<ion-content [fullscreen]="true" class="favorites-content">
+  <div class="fav-body">
+    <header class="fav-header">
+      <h1 class="loka-headline-md">Pharmacies favorites</h1>
+      <p class="subtitle">Vos établissements enregistrés</p>
+      <span class="count" *ngIf="favorites.length">{{ countLabel }}</span>
+    </header>
+
+    <div class="empty-state" *ngIf="!favorites.length">
+      <img src="assets/icon/Lokapharm-logo.png" alt="" class="app-logo app-logo--md" />
+      <h2>Aucun favori</h2>
+      <p>Enregistrez vos pharmacies pour les retrouver rapidement.</p>
+      <button type="button" class="loka-btn-primary" (click)="exploreList()">
+        Explorer la liste
+      </button>
+    </div>
+
+    <section class="fav-list" *ngIf="favorites.length">
+      <article
+        class="fav-card"
+        *ngFor="let pharmacy of favorites"
+        [class.fav-card--closed]="isOpen(pharmacy) === false"
+        (click)="selectFavorite(pharmacy)"
+      >
+        <img [src]="photoUrl(pharmacy)" [alt]="pharmacy.name" class="fav-thumb" />
+        <div class="fav-info">
+          <div class="fav-info__top">
+            <h2>{{ pharmacy.name }}</h2>
+            <button
+              type="button"
+              class="icon-btn"
+              aria-label="Retirer des favoris"
+              (click)="confirmRemove(pharmacy, $event)"
+            >
+              <ion-icon name="heart" color="danger"></ion-icon>
+            </button>
+          </div>
+          <p class="addr">{{ addressLine(pharmacy) }}</p>
+          <div class="fav-meta">
+            <span class="loka-badge loka-badge--on-call" *ngIf="pharmacy.isOnCall">Garde</span>
+            <span class="loka-badge loka-badge--closed" *ngIf="isOpen(pharmacy) === false">Fermé</span>
+            <span class="loka-badge loka-badge--open" *ngIf="isOpen(pharmacy) === true">Ouvert</span>
+          </div>
+          <button type="button" class="detail-link" (click)="selectFavorite(pharmacy); $event.stopPropagation()">
+            Voir détails →
+          </button>
+        </div>
+      </article>
+    </section>
+  </div>
+</ion-content>

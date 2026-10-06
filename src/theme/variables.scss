@@ -1,0 +1,139 @@
+:root {
+  /* ── Loka Health design tokens (Stitch) ── */
+  --loka-surface: #f8f9fa;
+  --loka-surface-dim: #d9dadb;
+  --loka-surface-bright: #f8f9fa;
+  --loka-surface-container-lowest: #ffffff;
+  --loka-surface-container-low: #f3f4f5;
+  --loka-surface-container: #edeeef;
+  --loka-surface-container-high: #e7e8e9;
+  --loka-surface-container-highest: #e1e3e4;
+  --loka-on-surface: #191c1d;
+  --loka-on-surface-variant: #42474c;
+  --loka-inverse-surface: #2e3132;
+  --loka-inverse-on-surface: #f0f1f2;
+  --loka-outline: #73777d;
+  --loka-outline-variant: #c3c7cd;
+  --loka-primary: #001624;
+  --loka-on-primary: #ffffff;
+  --loka-primary-container: #0d2b3e;
+  --loka-on-primary-container: #7893aa;
+  --loka-inverse-primary: #aecae2;
+  --loka-secondary: #944a00;
+  --loka-on-secondary: #ffffff;
+  --loka-secondary-container: #fc8f34;
+  --loka-on-secondary-container: #663100;
+  --loka-tertiary: #001908;
+  --loka-tertiary-container: #003015;
+  --loka-on-tertiary-container: #16a558;
+  --loka-error: #ba1a1a;
+  --loka-on-error: #ffffff;
+  --loka-background: #f8f9fa;
+  --loka-on-background: #191c1d;
+
+  --loka-shadow-1: 0px 2px 8px rgba(13, 43, 62, 0.05);
+  --loka-shadow-2: 0px 8px 20px rgba(13, 43, 62, 0.12);
+  --loka-shadow-3: 0px 16px 32px rgba(13, 43, 62, 0.2);
+
+  --loka-radius-sm: 8px;
+  --loka-radius-md: 12px;
+  --loka-radius-lg: 16px;
+  --loka-radius-xl: 24px;
+  --loka-radius-full: 9999px;
+
+  --loka-space-xs: 4px;
+  --loka-space-sm: 12px;
+  --loka-space-md: 16px;
+  --loka-space-lg: 24px;
+  --loka-space-xl: 32px;
+  --loka-safe-bottom: 80px;
+
+  --loka-font: 'Inter', 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Semantic aliases (legacy glass theme compatibility) */
+  --text-primary: var(--loka-on-surface);
+  --text-secondary: var(--loka-on-surface-variant);
+  --text-muted: var(--loka-outline);
+  --color-accent-blue: var(--loka-primary-container);
+  --color-accent-green: var(--loka-on-tertiary-container);
+  --color-accent-orange: var(--loka-secondary);
+  --color-surface-elevated: var(--loka-surface-container-lowest);
+  --border-glass-card: var(--loka-outline-variant);
+
+  --ion-color-primary: #0d2b3e;
+  --ion-color-primary-rgb: 13, 43, 62;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #0b2636;
+  --ion-color-primary-tint: #254051;
+
+  --ion-color-secondary: #944a00;
+  --ion-color-secondary-rgb: 148, 74, 0;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #824100;
+  --ion-color-secondary-tint: #9f5c1a;
+
+  --ion-color-success: #16a558;
+  --ion-color-success-rgb: 22, 165, 88;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #13914d;
+  --ion-color-success-tint: #2dae69;
+
+  --ion-color-danger: #ba1a1a;
+  --ion-color-danger-rgb: 186, 26, 26;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #a41717;
+  --ion-color-danger-tint: #c13131;
+
+  --ion-background-color: var(--loka-background);
+  --ion-toolbar-background: var(--loka-surface-container-lowest);
+  --ion-text-color: var(--loka-on-surface);
+  --ion-font-family: var(--loka-font);
+
+  --app-tab-bar-height: 80px;
+  --app-tab-bar-bottom-offset: 0px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --loka-background: #121416;
+    --loka-surface: #121416;
+    --loka-surface-container-lowest: #1c1f21;
+    --loka-surface-container-low: #222527;
+    --loka-surface-container: #2a2d2f;
+    --loka-surface-container-high: #323536;
+    --loka-surface-container-highest: #3a3d3e;
+    --loka-on-surface: #e8eaeb;
+    --loka-on-surface-variant: #c3c7cd;
+    --loka-outline: #8d9196;
+    --text-primary: var(--loka-on-surface);
+    --text-secondary: var(--loka-on-surface-variant);
+    --text-muted: var(--loka-outline);
+    --ion-background-color: var(--loka-background);
+    --ion-toolbar-background: var(--loka-surface-container-lowest);
+    --ion-text-color: var(--loka-on-surface);
+  }
+}
+
+:root.dark,
+body.dark {
+  --loka-background: #121416;
+  --loka-surface: #121416;
+  --loka-surface-container-lowest: #1c1f21;
+  --loka-surface-container-low: #222527;
+  --loka-surface-container: #2a2d2f;
+  --loka-surface-container-high: #323536;
+  --loka-surface-container-highest: #3a3d3e;
+  --loka-on-surface: #e8eaeb;
+  --loka-on-surface-variant: #c3c7cd;
+  --loka-outline: #8d9196;
+  --text-primary: var(--loka-on-surface);
+  --text-secondary: var(--loka-on-surface-variant);
+  --text-muted: var(--loka-outline);
+  --ion-background-color: var(--loka-background);
+  --ion-toolbar-background: var(--loka-surface-container-lowest);
+  --ion-text-color: var(--loka-on-surface);
+}

@@ -1,0 +1,26 @@
+<div class="nav-page">
+  <header class="instruction">
+    <h1>{{ instruction }}</h1>
+    <p *ngIf="remainingDistance != null">Dans {{ remainingDistance | distance }}</p>
+  </header>
+
+  <div class="map-dark">
+    <div class="user-pulse"></div>
+    <div class="fabs">
+      <button type="button" aria-label="Recentrer"><ion-icon name="locate"></ion-icon></button>
+    </div>
+  </div>
+
+  <footer class="eta">
+    <div>
+      <strong>{{ etaLabel }}</strong>
+      <span>Arrivée estimée</span>
+    </div>
+    <div class="stats">
+      <span>{{ remainingDuration | duration }}</span>
+      <span>·</span>
+      <span>{{ remainingDistance | distance }}</span>
+    </div>
+    <button type="button" class="quit" (click)="quit()">Quitter</button>
+  </footer>
+</div>

@@ -1,0 +1,109 @@
+<header class="profile-topbar">
+  <div class="profile-topbar__brand">
+    <img src="assets/icon/Lokapharm-logo.png" alt="Lokapharm" class="app-logo app-logo--sm" />
+    <span>Lokapharm</span>
+  </div>
+</header>
+
+<ion-content [fullscreen]="true" class="profile-content">
+  <div class="profile-body">
+    <section class="user-card loka-card">
+      <div class="avatar">L</div>
+      <div>
+        <h1 class="loka-headline-sm">{{ displayName }}</h1>
+        <p>{{ displayEmail }}</p>
+      </div>
+    </section>
+
+    <section class="settings-section">
+      <h2 class="section-title">Préférences</h2>
+
+      <div class="settings-row">
+        <div class="settings-row__label">
+          <ion-icon name="navigate-outline"></ion-icon>
+          <span>Unité de distance</span>
+        </div>
+        <span class="settings-row__value">{{ distanceUnit === 'km' ? 'Kilomètres' : 'Miles' }}</span>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row__label">
+          <ion-icon name="language-outline"></ion-icon>
+          <span>Langue</span>
+        </div>
+        <span class="settings-row__value">{{ language }}</span>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row__label">
+          <ion-icon name="notifications-outline"></ion-icon>
+          <span>Alertes de garde</span>
+        </div>
+        <ion-toggle [(ngModel)]="onCallAlerts" color="secondary"></ion-toggle>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row__label">
+          <ion-icon name="moon-outline"></ion-icon>
+          <span>Thème sombre</span>
+        </div>
+        <ion-toggle
+          [ngModel]="darkTheme"
+          (ngModelChange)="toggleDarkTheme($event)"
+          color="secondary"
+        ></ion-toggle>
+      </div>
+    </section>
+
+    <section class="settings-section">
+      <h2 class="section-title">Support & légal</h2>
+
+      <button type="button" class="settings-row clickable" (click)="openVisitHistory()">
+        <div class="settings-row__label">
+          <ion-icon name="time-outline"></ion-icon>
+          <span>Historique des visites</span>
+        </div>
+        <ion-icon name="chevron-forward"></ion-icon>
+      </button>
+
+      <button type="button" class="settings-row clickable" (click)="openSupportEmail()">
+        <div class="settings-row__label">
+          <ion-icon name="help-circle-outline"></ion-icon>
+          <span>Aide & support</span>
+        </div>
+        <ion-icon name="chevron-forward"></ion-icon>
+      </button>
+
+      <button type="button" class="settings-row clickable" (click)="openLegal('privacy')">
+        <div class="settings-row__label">
+          <ion-icon name="shield-checkmark-outline"></ion-icon>
+          <span>Politique de confidentialité</span>
+        </div>
+        <ion-icon name="chevron-forward"></ion-icon>
+      </button>
+
+      <button type="button" class="settings-row clickable" (click)="openLegal('terms')">
+        <div class="settings-row__label">
+          <ion-icon name="document-text-outline"></ion-icon>
+          <span>Conditions d'utilisation</span>
+        </div>
+        <ion-icon name="chevron-forward"></ion-icon>
+      </button>
+
+      <button type="button" class="settings-row clickable" (click)="openExternalUrl(websiteUrl)">
+        <div class="settings-row__label">
+          <ion-icon name="information-circle-outline"></ion-icon>
+          <span>À propos de Lokapharm</span>
+        </div>
+        <ion-icon name="chevron-forward"></ion-icon>
+      </button>
+    </section>
+
+    <p class="version">Lokapharm v{{ appVersion }}</p>
+
+    <p class="disclaimer">
+      LokaPharm est un outil d'information et d'orientation. Il ne remplace pas
+      un avis médical, une consultation ou une urgence sanitaire. Ce n’est pas un dispositif médical.
+    </p>
+  </div>
+</ion-content>

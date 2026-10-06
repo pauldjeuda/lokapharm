@@ -1,0 +1,71 @@
+ion-tabs {
+  --background: var(--loka-background);
+}
+
+ion-tab-bar.loka-tab-bar {
+  --background: rgba(255, 255, 255, 0.88);
+  --border: none;
+  --color: var(--loka-on-surface-variant);
+  --color-selected: var(--loka-secondary);
+  box-sizing: border-box;
+  height: var(--app-tab-bar-height);
+  margin: 0;
+  border-radius: 0;
+  padding: 4px 16px calc(4px + env(safe-area-inset-bottom));
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border-top: 1px solid var(--loka-surface-container);
+  box-shadow: 0 -4px 24px rgba(13, 43, 62, 0.06);
+}
+
+:root.dark ion-tab-bar.loka-tab-bar,
+body.dark ion-tab-bar.loka-tab-bar {
+  --background: rgba(44, 49, 50, 0.92);
+}
+
+ion-tab-button {
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+  max-width: 72px;
+  transition: transform 0.25s ease;
+
+  &.tab-selected {
+    ion-icon {
+      transform: scale(1.05);
+    }
+
+    ion-label {
+      color: var(--loka-secondary);
+      font-weight: 700;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--loka-secondary);
+    }
+  }
+
+  ion-icon {
+    font-size: 24px;
+    margin-bottom: 2px;
+    transition: transform 0.25s ease;
+  }
+
+  ion-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    margin: 0;
+  }
+
+  &:active {
+    transform: scale(0.9);
+  }
+}

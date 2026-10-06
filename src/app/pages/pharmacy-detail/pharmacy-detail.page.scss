@@ -1,0 +1,245 @@
+.detail-page {
+  --background: var(--loka-background);
+}
+
+.hero {
+  position: relative;
+  height: 250px;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: var(--loka-surface-container);
+  }
+}
+
+.hero-actions {
+  position: absolute;
+  inset: calc(12px + env(safe-area-inset-top)) 16px auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chrome {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  display: grid;
+  place-items: center;
+  box-shadow: var(--loka-shadow-1);
+  cursor: pointer;
+
+  ion-icon {
+    font-size: 20px;
+    color: var(--loka-on-surface);
+  }
+}
+
+.mini-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: contain;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 4px;
+}
+
+.sheet {
+  margin-top: -24px;
+  border-radius: 16px 16px 0 0;
+  background: var(--loka-background);
+  padding: 24px 16px 140px;
+  position: relative;
+  z-index: 2;
+}
+
+.title-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0 0 4px;
+    font-size: 24px;
+    line-height: 32px;
+    font-weight: 600;
+  }
+}
+
+.addr {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--loka-on-surface-variant);
+  font-size: 14px;
+}
+
+.on-call {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(0, 48, 21, 0.08);
+  border: 1px solid rgba(22, 165, 88, 0.35);
+  color: var(--loka-on-tertiary-container);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.hours-card,
+.map-card {
+  background: var(--loka-surface-container-lowest);
+  border-radius: 12px;
+  box-shadow: var(--loka-shadow-1);
+  border: 1px solid var(--loka-surface-variant);
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+
+.hours-card {
+  padding: 16px;
+  cursor: pointer;
+}
+
+.hours-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  strong {
+    display: block;
+    font-size: 16px;
+  }
+
+  p {
+    margin: 0;
+    color: var(--loka-on-tertiary-container);
+    font-size: 14px;
+  }
+
+  ion-icon:last-child {
+    margin-left: auto;
+    color: var(--loka-outline);
+  }
+}
+
+.hours-body {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--loka-surface-variant);
+  color: var(--loka-on-surface-variant);
+  font-size: 14px;
+}
+
+section h2 {
+  margin: 0 0 12px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.mini-map {
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--loka-surface-container);
+  color: var(--loka-on-surface-variant);
+
+  ion-icon {
+    font-size: 40px;
+  }
+}
+
+.map-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px;
+
+  p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--loka-on-surface);
+  }
+}
+
+.meta-right {
+  text-align: right;
+
+  strong {
+    display: block;
+    font-size: 18px;
+    color: var(--loka-primary);
+  }
+
+  span {
+    font-size: 12px;
+    color: var(--loka-on-surface-variant);
+  }
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.info-tile {
+  background: var(--loka-surface-container-lowest);
+  border: 1px solid var(--loka-surface-variant);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: var(--loka-shadow-1);
+
+  ion-icon {
+    font-size: 22px;
+    color: var(--loka-primary-container);
+  }
+
+  span {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+}
+
+.cta-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  display: flex;
+  gap: 12px;
+  padding: 16px 16px calc(16px + env(safe-area-inset-bottom));
+  background: linear-gradient(to top, var(--loka-background), rgba(248, 249, 250, 0.9), transparent);
+
+  button {
+    flex: 1;
+  }
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  color: var(--loka-outline);
+  font-size: 13px;
+}

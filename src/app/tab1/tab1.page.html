@@ -1,0 +1,248 @@
+<ion-content [fullscreen]="true" class="explore-content">
+  <div #mapContainer class="map-container"></div>
+
+  <div class="map-overlay" [class.navigating]="isNavigating">
+    <div class="search-panel" *ngIf="!isNavigating">
+      <div class="loka-search-bar map-search">
+        <img src="assets/icon/Lokapharm-logo.png" alt="" class="app-logo app-logo--sm" />
+        <input
+          type="search"
+          placeholder="Rechercher une pharmacie, un quartier..."
+          [value]="searchQuery"
+          (input)="onSearchInput($any($event.target).value)"
+        />
+        <div class="search-divider"></div>
+        <button type="button" class="icon-btn" aria-label="Filtres" (click)="openFilters()">
+          <ion-icon name="options-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="filter-chips hide-scrollbar">
+        <button
+          type="button"
+          class="loka-chip"
+          [class.active]="mapFilters.onCall"
+          (click)="toggleQuickFilter('onCall')"
+        >
+          <ion-icon *ngIf="mapFilters.onCall" name="checkmark"></ion-icon>
+          De garde
+        </button>
+        <button
+          type="button"
+          class="loka-chip"
+          [class.active]="mapFilters.open24h"
+          (click)="toggleQuickFilter('open24h')"
+        >
+          Ouvert 24/7
+        </button>
+        <button
+          type="button"
+          class="loka-chip"
+          [class.active]="mapFilters.maxDistanceKm === 5"
+          (click)="toggleQuickFilter('near5')"
+        >
+          &lt; 5 km
+        </button>
+        <button
+          *ngFor="let filter of filters"
+          type="button"
+          class="loka-chip"
+          [class.active]="activeFilter === filter.id"
+          (click)="setFilter(filter.id)"
+        >
+          {{ filter.label }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="fab-stack" *ngIf="!isNavigating" [style.bottom]="fabBottomOffset">
+    <ion-fab-button size="small" class="map-fab" (click)="openMapModes()" aria-label="Changer le mode de carte">
+      <ion-icon name="layers"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-button size="small" class="map-fab" (click)="recenterOnUser()" aria-label="Recentrer sur ma position">
+      <ion-icon name="locate"></ion-icon>
+    </ion-fab-button>
+  </div>
+
+  <div *ngIf="isNavigating" class="navigation-panel">
+    <div class="navigation-header">
+      <button class="stop-btn" type="button" aria-label="Arrêter la navigation" (click)="stopNavigation()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+      <div class="navigation-info">
+        <p class="navigation-label">Navigation en cours</p>
+        <h2>{{ selectedPharmacy?.name }}</h2>
+      </div>
+    </div>
+
+    <div class="navigation-stats">
+      <div class="navigation-stat">
+        <span class="stat-value">{{ remainingDistance | distance }}</span>
+        <span class="stat-label">restant</span>
+      </div>
+      <div class="navigation-divider"></div>
+      <div class="navigation-stat">
+        <span class="stat-value">{{ remainingDuration | duration }}</span>
+        <span class="stat-label">arrivée estimée</span>
+      </div>
+    </div>
+
+    <ion-button expand="block" fill="outline" color="danger" (click)="stopNavigation()">
+      Arrêter la navigation
+    </ion-button>
+  </div>
+
+  <app-map-modes-sheet
+    [isOpen]="mapModesOpen"
+    [settings]="mapSettings"
+    (closed)="closeMapModes()"
+    (modeChange)="onMapModeChange($event)"
+    (trafficChange)="onTrafficToggle($event)"
+    (labelsChange)="onLabelsToggle($event)"
+  ></app-map-modes-sheet>
+
+  <app-filters-sheet
+    [open]="filtersOpen"
+    [value]="mapFilters"
+    (closed)="closeFilters()"
+    (applied)="applyMapFilters($event)"
+  ></app-filters-sheet>
+
+  <ion-modal
+    #pharmacySheetModal
+    [isOpen]="isSheetOpen && !isNavigating"
+    [initialBreakpoint]="sheetInitialBreakpoint"
+    [breakpoints]="sheetBreakpoints"
+    [expandToScroll]="false"
+    [backdropDismiss]="false"
+    [showBackdrop]="false"
+    [handle]="true"
+    class="pharmacy-sheet"
+    (ionBreakpointDidChange)="onSheetBreakpointChange($event)"
+  >
+    <ng-template>
+      <div class="sheet-shell" [class.sheet-shell--detail]="isDetailView">
+        <header class="sheet-sticky-header">
+          <ng-container *ngIf="isDetailView; else listHeader">
+            <div class="detail-chrome">
+              <button
+                class="chrome-btn"
+                type="button"
+                aria-label="Retour à la liste"
+                (click)="clearSelection()"
+              >
+                <ion-icon name="arrow-back"></ion-icon>
+              </button>
+
+              <div class="detail-chrome-text" (click)="openPharmacyDetail()">
+                <h2>{{ activePharmacy?.name }}</h2>
+                <p *ngIf="activePharmacy?.distanceMeters">
+                  {{ activePharmacy?.distanceMeters | distance }}
+                  <span *ngIf="activePharmacy?.durationSeconds">
+                    · {{ activePharmacy?.durationSeconds | duration }}
+                  </span>
+                </p>
+              </div>
+
+              <button
+                class="chrome-btn"
+                type="button"
+                aria-label="Ajouter aux favoris"
+                (click)="toggleFavorite(activePharmacy!)"
+              >
+                <ion-icon [name]="isFavorite(activePharmacy!) ? 'star' : 'star-outline'"></ion-icon>
+              </button>
+            </div>
+          </ng-container>
+
+          <ng-template #listHeader>
+            <div class="list-chrome">
+              <div class="sheet-title-brand">
+                <img src="assets/icon/Lokapharm-logo.png" alt="Lokapharm" class="app-logo app-logo--sm" />
+                <div>
+                  <h2>Pharmacies à proximité</h2>
+                  <p>
+                    {{ pharmacies.length }} trouvée(s) · triées par distance
+                    <span *ngIf="dataSource !== 'Aucune'" class="source-badge">
+                      · {{ dataSource }}{{ fromCache ? ' (cache)' : '' }}
+                    </span>
+                  </p>
+                </div>
+              </div>
+              <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
+            </div>
+          </ng-template>
+        </header>
+
+        <ion-content class="sheet-body" [scrollY]="true">
+          <ion-refresher
+            *ngIf="!isDetailView"
+            slot="fixed"
+            (ionRefresh)="onRefresh($event)"
+          >
+            <ion-refresher-content></ion-refresher-content>
+          </ion-refresher>
+
+          <div *ngIf="loading && !pharmacies.length && !isDetailView" class="loading-skeleton">
+            <ion-skeleton-text animated style="height: 72px; border-radius: 18px; margin: 0 16px 8px;"></ion-skeleton-text>
+            <ion-skeleton-text animated style="height: 72px; border-radius: 18px; margin: 0 16px 8px;"></ion-skeleton-text>
+            <ion-skeleton-text animated style="height: 72px; border-radius: 18px; margin: 0 16px 8px;"></ion-skeleton-text>
+          </div>
+
+          <div *ngIf="!loading && !pharmacies.length && !isDetailView" class="empty-pharmacies">
+            <img src="assets/icon/Lokapharm-logo.png" alt="Lokapharm" class="app-logo app-logo--md" />
+            <h3>Aucune pharmacie trouvée</h3>
+            <p>Les données combinent notre annuaire MINSANTE et OpenStreetMap. Vérifiez votre connexion ou élargissez la zone de recherche.</p>
+          </div>
+
+          <app-pharmacy-detail
+            *ngIf="isDetailView"
+            [pharmacy]="pharmacyDetails ?? selectedPharmacy"
+            [loading]="detailsLoading"
+            [routeLoading]="routeLoading"
+            (startNavigation)="openRoutePreview()"
+            (call)="callPharmacy($event)"
+          ></app-pharmacy-detail>
+
+          <ion-list *ngIf="!isDetailView" lines="none" class="pharmacy-list">
+            <ion-item
+              *ngFor="let pharmacy of pharmacies; trackBy: trackByPharmacyId; let index = index"
+              button
+              detail
+              class="pharmacy-item"
+              [class.selected]="selectedPharmacy?.id === pharmacy.id"
+              (click)="selectPharmacy(pharmacy)"
+            >
+              <div class="pharmacy-start" slot="start">
+                <div class="rank-badge">{{ index + 1 }}</div>
+                <div class="pharmacy-icon">
+                  <ion-icon name="medical"></ion-icon>
+                </div>
+              </div>
+              <ion-label>
+                <h3>{{ pharmacy.name }}</h3>
+                <p>{{ pharmacy.district || pharmacy.city || pharmacy.address }}</p>
+              </ion-label>
+              <div slot="end" class="distance-badge">
+                {{ pharmacy.distanceMeters | distance }}
+              </div>
+            </ion-item>
+          </ion-list>
+        </ion-content>
+
+        <footer *ngIf="isDetailView" class="sheet-sticky-footer">
+          <ion-button
+            expand="block"
+            class="directions-btn"
+            [disabled]="routeLoading || !activePharmacy"
+            (click)="openRoutePreview()"
+          >
+            <ion-icon slot="start" name="navigate"></ion-icon>
+            {{ routeLoading ? 'Calcul du trajet...' : 'Itinéraire' }}
+          </ion-button>
+        </footer>
+      </div>
+    </ng-template>
+  </ion-modal>
+</ion-content>

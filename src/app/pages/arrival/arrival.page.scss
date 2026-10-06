@@ -1,0 +1,77 @@
+.arrival {
+  min-height: 100%;
+  padding: calc(48px + env(safe-area-inset-top)) 24px calc(24px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: var(--loka-background);
+}
+
+.pop {
+  animation: pop 0.5s ease;
+}
+
+h1 {
+  margin: 16px 0 8px;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--loka-primary);
+}
+
+.name {
+  margin: 0 0 28px;
+  color: var(--loka-on-surface-variant);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+  max-width: 420px;
+  margin-bottom: 28px;
+
+  div {
+    background: var(--loka-surface-container-lowest);
+    border-radius: 12px;
+    padding: 16px 8px;
+    box-shadow: var(--loka-shadow-1);
+  }
+
+  strong {
+    display: block;
+    font-size: 16px;
+  }
+
+  span {
+    font-size: 12px;
+    color: var(--loka-outline);
+  }
+}
+
+.full {
+  width: 100%;
+  max-width: 420px;
+  margin-bottom: 12px;
+}
+
+.link {
+  margin-top: 8px;
+  border: none;
+  background: none;
+  color: var(--loka-secondary);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

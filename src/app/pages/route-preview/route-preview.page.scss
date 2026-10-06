@@ -1,0 +1,145 @@
+.route-page {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--loka-background);
+}
+
+.top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: calc(12px + env(safe-area-inset-top)) 16px 12px;
+}
+
+.chrome,
+.modes button {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: var(--loka-surface-container-lowest);
+  box-shadow: var(--loka-shadow-2);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.logo {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.modes {
+  display: flex;
+  gap: 8px;
+
+  button.active {
+    background: var(--loka-primary-container);
+    color: #fff;
+  }
+}
+
+.map-placeholder {
+  height: 45vh;
+  background:
+    linear-gradient(135deg, #e5e3df, #f3f4f5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--loka-on-surface-variant);
+}
+
+.route-line {
+  width: 70%;
+  height: 4px;
+  border-radius: 999px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--loka-secondary-container) 0 12px,
+    transparent 12px 20px
+  );
+}
+
+.sheet {
+  flex: 1;
+  margin-top: -20px;
+  background: var(--loka-surface-container-lowest);
+  border-radius: 24px 24px 0 0;
+  padding: 12px 16px calc(24px + env(safe-area-inset-bottom));
+  box-shadow: var(--loka-shadow-3);
+  z-index: 4;
+}
+
+.handle {
+  width: 40px;
+  height: 4px;
+  background: var(--loka-outline-variant);
+  border-radius: 2px;
+  margin: 0 auto 16px;
+}
+
+.head h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.status {
+  margin: 4px 0 0;
+  color: var(--loka-on-tertiary-container);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.steps {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+  max-height: 32vh;
+  overflow: auto;
+}
+
+.steps li {
+  display: flex;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--loka-surface-container);
+}
+
+.num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--loka-surface-container);
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.steps strong {
+  display: block;
+  font-size: 14px;
+}
+
+.steps p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--loka-outline);
+}
+
+.full {
+  width: 100%;
+}

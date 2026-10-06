@@ -1,0 +1,96 @@
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(8px + env(safe-area-inset-top)) 16px 8px;
+  background: var(--loka-surface-container-lowest);
+  box-shadow: var(--loka-shadow-1);
+
+  h1 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+  }
+}
+
+.back {
+  border: none;
+  background: transparent;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+
+.body {
+  padding: 16px 16px 32px;
+  max-width: 672px;
+  margin: 0 auto;
+}
+
+.intro {
+  color: var(--loka-on-surface-variant);
+  margin: 0 0 20px;
+}
+
+.visit-card {
+  display: flex;
+  gap: 12px;
+  background: var(--loka-surface-container-lowest);
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: var(--loka-shadow-1);
+  border-left: 4px solid var(--loka-secondary);
+  margin-bottom: 16px;
+
+  img {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+    background: var(--loka-surface-container);
+  }
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+
+  h2 {
+    margin: 0;
+    font-size: 16px;
+  }
+
+  p {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: var(--loka-on-surface-variant);
+  }
+}
+
+.date {
+  font-size: 12px !important;
+  color: var(--loka-outline) !important;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  align-items: center;
+}
+
+.done {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--loka-on-tertiary-container);
+}
+
+.empty {
+  padding: 40px 16px;
+  text-align: center;
+  color: var(--loka-on-surface-variant);
+}
