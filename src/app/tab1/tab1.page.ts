@@ -6,7 +6,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { IonModal, ViewDidEnter, ViewWillEnter, ViewWillLeave } from '@ionic/angular';
+import { ViewDidEnter, ViewWillEnter, ViewWillLeave } from '@ionic/angular';
 import * as L from 'leaflet';
 import { combineLatest, Subscription } from 'rxjs';
 import { distinctUntilChanged, throttleTime } from 'rxjs/operators';
@@ -14,7 +14,6 @@ import { DEFAULT_CENTER } from '../core/constants/cameroon-bounds';
 import { GeoPoint } from '../core/models/geo-point.model';
 import { Pharmacy, PharmacyDetails } from '../core/models/pharmacy.model';
 import { RouteResult } from '../core/models/route.model';
-import { MapViewMode, MapViewSettings } from '../core/models/map-view.model';
 import { GeolocationService } from '../core/services/geolocation.service';
 import { HapticsService } from '../core/services/haptics.service';
 import { PermissionService } from '../core/services/permission.service';
@@ -36,19 +35,10 @@ export class Tab1Page
   implements OnInit, AfterViewInit, OnDestroy, ViewWillEnter, ViewDidEnter, ViewWillLeave
 {
   @ViewChild('mapContainer', { static: true }) mapContainer!: ElementRef<HTMLDivElement>;
-  @ViewChild('pharmacySheetModal') pharmacySheetModal?: IonModal;
-
-  readonly sheetBreakpoints = [0.18, 0.28, 0.38, 0.82];
-  readonly listBreakpoint = 0.38;
-  readonly detailBreakpoint = 0.28;
-  readonly collapseBreakpoint = 0.18;
 
   searchQuery = '';
   activeFilter: PharmacyFilter = 'nearby';
-  isSheetOpen = true;
-  sheetInitialBreakpoint = 0.38;
-  currentSheetBreakpoint = 0.38;
-  fabBottomOffset = 'calc(42vh + 16px)';
+  fabBottomOffset = 'calc(100px + 120px)';
   selectedPharmacy: Pharmacy | null = null;
   pharmacyDetails: PharmacyDetails | null = null;
   detailsLoading = false;
@@ -61,7 +51,6 @@ export class Tab1Page
   remainingDuration: number | null = null;
   dataSource: DataSourceLabel = 'Aucune';
   fromCache = false;
-  mapModesOpen = false;
   filtersOpen = false;
   mapFilters: MapFiltersState = {
     onCall: false,
@@ -69,25 +58,14 @@ export class Tab1Page
     maxDistanceKm: null,
     sortBy: 'distance',
   };
-  mapSettings: MapViewSettings = { mode: 'explore', traffic: false, labels: true };
   favoriteIds = new Set<string>();
-
-  readonly filters: Array<{ id: PharmacyFilter; label: string; icon: string }> = [
-    { id: 'nearby', label: 'Proche', icon: 'locate' },
-    { id: 'yaounde', label: 'Yaoundé', icon: 'business' },
-    { id: 'douala', label: 'Douala', icon: 'boat' },
-  ];
-
-  get isDetailView(): boolean {
-    return Boolean(this.selectedPharmacy);
-  }
 
   get activePharmacy(): Pharmacy | null {
     return this.pharmacyDetails ?? this.selectedPharmacy;
   }
 
   private map?: L.Map;
-  private userMarker?: L.CircleMarker;
+  private userMarker?: L.Marker;
   private pharmacyMarkers = new Map<string, L.Marker>();
   private routeOutlineLayer?: L.Polyline;
   private routeMainLayer?: L.Polyline;
@@ -100,9 +78,6 @@ export class Tab1Page
   private mapActive = false;
   private subscriptions = new Subscription();
   private positionSubscription?: Subscription;
-
-  private readonly pharmacyIconDefault = this.createPharmacyIcon(false);
-  private readonly pharmacyIconSelected = this.createPharmacyIcon(true);
   private readonly TRAVELED_THROTTLE_MS = 800;
   private readonly POSITION_THROTTLE_MS = 600;
 
@@ -132,6 +107,7 @@ export class Tab1Page
         if (this.mapActive) {
           this.renderPharmacyMarkers(pharmacies);
         }
+        this.updateFabOffset();
       })
     );
 
@@ -139,6 +115,7 @@ export class Tab1Page
       this.pharmacyFacade.selectedPharmacy$.subscribe((pharmacy) => {
         const previousId = this.selectedPharmacy?.id ?? null;
         this.selectedPharmacy = pharmacy;
+        this.updateFabOffset();
         if (this.mapActive && previousId !== (pharmacy?.id ?? null)) {
           this.updateMarkerSelection(previousId, pharmacy?.id ?? null);
         }
@@ -191,12 +168,6 @@ export class Tab1Page
     this.subscriptions.add(
       this.pharmacyFacade.detailsLoading$.subscribe((loading) => {
         this.detailsLoading = loading;
-      })
-    );
-
-    this.subscriptions.add(
-      this.mapLayers.settings$.subscribe((settings) => {
-        this.mapSettings = settings;
       })
     );
 
@@ -281,78 +252,13 @@ export class Tab1Page
     this.map = undefined;
   }
 
-  onSearchChange(event: CustomEvent): void {
-    this.searchQuery = event.detail.value ?? '';
-    this.pharmacyFacade.setSearchQuery(this.searchQuery);
-  }
-
   onSearchInput(value: string): void {
     this.searchQuery = value ?? '';
     this.pharmacyFacade.setSearchQuery(this.searchQuery);
   }
 
-  setFilter(filter: PharmacyFilter): void {
-    if (this.activeFilter !== filter) {
-      void this.haptics.impactLight();
-    }
-
-    this.activeFilter = filter;
-    this.pharmacyFacade.setFilter(filter);
-  }
-
-  onRefresh(event: CustomEvent): void {
-    const refresher = event.target as HTMLIonRefresherElement;
-    this.pharmacyFacade.refreshPharmacies(this.activeFilter).subscribe({
-      complete: () => refresher.complete(),
-      error: () => refresher.complete(),
-    });
-  }
-
-  selectPharmacy(pharmacy: Pharmacy): void {
-    if (this.isNavigating) {
-      return;
-    }
-
-    this.isSheetOpen = true;
-    this.routeFrameFittedFor = null;
-    this.clearRouteLayers();
-
-    this.pharmacyFacade.selectPharmacy(pharmacy);
-    this.calculateRoute(pharmacy);
-    this.pharmacyFacade.loadPharmacyDetails(pharmacy).subscribe();
-    void this.expandSheetTo(this.detailBreakpoint);
-  }
-
-  clearSelection(): void {
-    if (this.isNavigating) {
-      this.stopNavigation();
-    }
-
-    this.pharmacyFacade.selectPharmacy(null);
-    this.routingFacade.clearRoute();
-    this.clearRouteLayers();
-    void this.expandSheetTo(this.listBreakpoint);
-  }
-
-  onSheetBreakpointChange(event: CustomEvent<{ breakpoint: number }>): void {
-    const breakpoint = event.detail.breakpoint;
-    this.currentSheetBreakpoint = breakpoint;
-    this.updateFabOffset(breakpoint);
-
-    if (this.isDetailView && breakpoint <= this.collapseBreakpoint + 0.01) {
-      this.pharmacyFacade.selectPharmacy(null);
-      this.routingFacade.clearRoute();
-      this.clearRouteLayers();
-      void this.expandSheetTo(this.listBreakpoint);
-    }
-  }
-
   callPharmacy(phone: string): void {
     window.open(`tel:${phone.replace(/\s+/g, '')}`, '_self');
-  }
-
-  openMapModes(): void {
-    this.mapModesOpen = true;
   }
 
   openFilters(): void {
@@ -397,20 +303,14 @@ export class Tab1Page
     });
   }
 
-  closeMapModes(): void {
-    this.mapModesOpen = false;
-  }
-
-  onMapModeChange(mode: MapViewMode): void {
-    this.mapLayers.setMode(mode);
-  }
-
-  onTrafficToggle(enabled: boolean): void {
-    this.mapLayers.setTraffic(enabled);
-  }
-
-  onLabelsToggle(enabled: boolean): void {
-    this.mapLayers.setLabels(enabled);
+  clearSelection(): void {
+    if (this.isNavigating) {
+      this.navigationFacade.stopNavigation();
+    }
+    this.pharmacyFacade.selectPharmacy(null);
+    this.routingFacade.clearRoute();
+    this.clearRouteLayers();
+    this.updateFabOffset();
   }
 
   recenterOnUser(): void {
@@ -420,7 +320,20 @@ export class Tab1Page
     });
   }
 
-  calculateRoute(pharmacy: Pharmacy): void {
+  selectPharmacy(pharmacy: Pharmacy): void {
+    if (this.isNavigating) {
+      return;
+    }
+
+    this.routeFrameFittedFor = null;
+    this.clearRouteLayers();
+    this.pharmacyFacade.selectPharmacy(pharmacy);
+    this.calculateRoute(pharmacy);
+    this.pharmacyFacade.loadPharmacyDetails(pharmacy).subscribe();
+    this.updateFabOffset();
+  }
+
+  private calculateRoute(pharmacy: Pharmacy): void {
     this.routingFacade.calculateRoute({ lat: pharmacy.lat, lng: pharmacy.lng }).subscribe({
       next: (route) => {
         this.pharmacyFacade.selectPharmacy({
@@ -432,53 +345,6 @@ export class Tab1Page
     });
   }
 
-  async startNavigation(pharmacy: Pharmacy): Promise<void> {
-    if (this.routeLoading) {
-      return;
-    }
-
-    if (!this.currentRoute) {
-      this.routingFacade.calculateRoute({ lat: pharmacy.lat, lng: pharmacy.lng }).subscribe({
-        next: async (route) => {
-          this.pharmacyFacade.selectPharmacy({
-            ...pharmacy,
-            distanceMeters: route.distanceMeters,
-            durationSeconds: route.durationSeconds,
-          });
-          await this.navigationFacade.startNavigation(pharmacy, route);
-          void this.haptics.impactLight();
-        },
-      });
-      return;
-    }
-
-    await this.navigationFacade.startNavigation(pharmacy, this.currentRoute);
-    void this.haptics.impactLight();
-  }
-
-  stopNavigation(): void {
-    this.navigationFacade.stopNavigation();
-    this.traveledLayer?.remove();
-    this.traveledLayer = undefined;
-  }
-
-  toggleFavorite(pharmacy: Pharmacy, event?: Event): void {
-    event?.stopPropagation();
-    const isAddingFavorite = !this.isFavorite(pharmacy);
-    this.pharmacyFacade.toggleFavorite(pharmacy);
-    if (isAddingFavorite) {
-      void this.haptics.notifySuccess();
-    }
-  }
-
-  isFavorite(pharmacy: Pharmacy): boolean {
-    return this.favoriteIds.has(pharmacy.id);
-  }
-
-  trackByPharmacyId(_index: number, pharmacy: Pharmacy): string {
-    return pharmacy.id;
-  }
-
   private initMap(): void {
     this.map = L.map(this.mapContainer.nativeElement, {
       zoomControl: false,
@@ -487,7 +353,11 @@ export class Tab1Page
     }).setView([DEFAULT_CENTER.lat, DEFAULT_CENTER.lng], 13);
 
     this.mapLayers.attachMap(this.map);
-    L.control.zoom({ position: 'bottomright' }).addTo(this.map);
+    this.map.on('click', () => {
+      if (this.selectedPharmacy && !this.isNavigating) {
+        this.clearSelection();
+      }
+    });
   }
 
   private startPositionUpdates(): void {
@@ -539,14 +409,15 @@ export class Tab1Page
       return;
     }
 
+    const icon = L.divIcon({
+      className: 'user-location-marker',
+      html: `<div class="user-location-dot"></div>`,
+      iconSize: [16, 16],
+      iconAnchor: [8, 8],
+    });
+
     if (!this.userMarker) {
-      this.userMarker = L.circleMarker([lat, lng], {
-        radius: 10,
-        color: '#ffffff',
-        weight: 3,
-        fillColor: '#1a73e8',
-        fillOpacity: 1,
-      }).addTo(this.map);
+      this.userMarker = L.marker([lat, lng], { icon, zIndexOffset: 1000 }).addTo(this.map);
       return;
     }
 
@@ -577,15 +448,18 @@ export class Tab1Page
       const existing = this.pharmacyMarkers.get(pharmacy.id);
 
       if (existing) {
-        existing.setIcon(isSelected ? this.pharmacyIconSelected : this.pharmacyIconDefault);
+        existing.setIcon(this.createPharmacyIcon(pharmacy, isSelected));
         continue;
       }
 
       const marker = L.marker([pharmacy.lat, pharmacy.lng], {
-        icon: isSelected ? this.pharmacyIconSelected : this.pharmacyIconDefault,
+        icon: this.createPharmacyIcon(pharmacy, isSelected),
       }).addTo(this.map);
 
-      marker.on('click', () => this.onMarkerClick(pharmacy.id));
+      marker.on('click', (event) => {
+        L.DomEvent.stopPropagation(event);
+        this.onMarkerClick(pharmacy.id);
+      });
       this.pharmacyMarkers.set(pharmacy.id, marker);
     }
   }
@@ -600,11 +474,17 @@ export class Tab1Page
 
   private updateMarkerSelection(previousId: string | null, nextId: string | null): void {
     if (previousId && previousId !== nextId) {
-      this.pharmacyMarkers.get(previousId)?.setIcon(this.pharmacyIconDefault);
+      const prev = this.pharmacies.find((p) => p.id === previousId);
+      if (prev) {
+        this.pharmacyMarkers.get(previousId)?.setIcon(this.createPharmacyIcon(prev, false));
+      }
     }
 
     if (nextId) {
-      this.pharmacyMarkers.get(nextId)?.setIcon(this.pharmacyIconSelected);
+      const next = this.pharmacies.find((p) => p.id === nextId) ?? this.selectedPharmacy;
+      if (next) {
+        this.pharmacyMarkers.get(nextId)?.setIcon(this.createPharmacyIcon(next, true));
+      }
     }
   }
 
@@ -616,13 +496,39 @@ export class Tab1Page
     this.pharmacyMarkers.clear();
   }
 
-  private createPharmacyIcon(selected: boolean): L.DivIcon {
+  private createPharmacyIcon(pharmacy: Pharmacy, selected: boolean): L.DivIcon {
+    const onCall = Boolean(pharmacy.isOnCall);
+    const showLabel = selected;
+    const label = showLabel
+      ? `<div class="loka-marker__label">${this.escapeHtml(pharmacy.name)}</div>`
+      : '';
+    const classes = [
+      'loka-marker',
+      onCall ? 'loka-marker--garde' : 'loka-marker--normal',
+      selected ? 'loka-marker--selected' : '',
+    ]
+      .filter(Boolean)
+      .join(' ');
+
+    const glyph = `<svg class="loka-marker__glyph" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M19 3H5c-1.1 0-2 .9-2 2v2c0 .55.45 1 1 1h1v11c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V8h1c.55 0 1-.45 1-1V5c0-1.1-.9-2-2-2zm-2 15H7V8h10v10zm-2.5-6h-2v-2h-1v2h-2v1h2v2h1v-2h2v-1z"/></svg>`;
+
     return L.divIcon({
       className: 'pharmacy-marker',
-      html: `<div class="marker-pin ${selected ? 'selected' : ''}"></div>`,
-      iconSize: [30, 30],
-      iconAnchor: [15, 30],
+      html: `<div class="${classes}">
+        <div class="loka-marker__icon">${glyph}</div>
+        ${label}
+      </div>`,
+      iconSize: [32, showLabel ? 56 : 40],
+      iconAnchor: [16, showLabel ? 56 : 40],
     });
+  }
+
+  private escapeHtml(value: string): string {
+    return value
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
   }
 
   private drawRoute(route: RouteResult | null): void {
@@ -660,9 +566,9 @@ export class Tab1Page
 
     this.routePreviewLayer = L.polyline(latLngs, {
       className: 'route-path route-path-preview',
-      color: '#7eb8f7',
+      color: '#fc8f34',
       weight: 5,
-      opacity: 0.5,
+      opacity: 0.55,
       dashArray: '8 14',
       lineCap: 'round',
       lineJoin: 'round',
@@ -687,18 +593,14 @@ export class Tab1Page
       }).addTo(this.map);
 
       this.routeMainLayer = L.polyline(latLngs, {
-        className: 'route-path route-path-main route-path-enter',
-        color: '#4285f4',
+        className: 'route-path route-path-main',
+        color: '#944a00',
         weight: 5.5,
         opacity: 0.95,
         lineCap: 'round',
         lineJoin: 'round',
         smoothFactor: 1.25,
       }).addTo(this.map);
-
-      requestAnimationFrame(() => {
-        this.routeMainLayer?.getElement()?.classList.remove('route-path-enter');
-      });
       return;
     }
 
@@ -711,17 +613,12 @@ export class Tab1Page
       return;
     }
 
-    const element = this.routePreviewLayer.getElement() as SVGPathElement | undefined;
-    if (element) {
-      element.classList.add('route-path-fade-out');
-    }
-
     this.clearPreviewTimer();
     this.previewFadeTimer = setTimeout(() => {
       this.routePreviewLayer?.remove();
       this.routePreviewLayer = undefined;
       this.previewFadeTimer = undefined;
-    }, 480);
+    }, 200);
   }
 
   private clearPreviewTimer(): void {
@@ -743,13 +640,10 @@ export class Tab1Page
 
     this.routeFrameFittedFor = pharmacyId;
     const bounds = L.latLngBounds(latLngs);
-    const sheetHeight = Math.max(this.currentSheetBreakpoint, this.detailBreakpoint);
-    const bottomPadding = Math.round(90 + sheetHeight * 220);
-    const topPadding = Math.round(96 + Math.max(0, (0.38 - sheetHeight) * 120));
 
     this.map.flyToBounds(bounds, {
-      paddingTopLeft: L.point(28, topPadding),
-      paddingBottomRight: L.point(28, bottomPadding),
+      paddingTopLeft: L.point(28, 120),
+      paddingBottomRight: L.point(28, 220),
       maxZoom: 16,
       duration: 0.85,
       easeLinearity: 0.22,
@@ -813,20 +707,9 @@ export class Tab1Page
     this.map.fitBounds(bounds.pad(0.2));
   }
 
-  private async expandSheetTo(breakpoint: number): Promise<void> {
-    this.currentSheetBreakpoint = breakpoint;
-    this.updateFabOffset(breakpoint);
-
-    const modal = this.pharmacySheetModal;
-    if (!modal) {
-      return;
-    }
-
-    await modal.setCurrentBreakpoint(breakpoint);
-  }
-
-  private updateFabOffset(breakpoint: number): void {
-    const sheetHeightVh = Math.round(breakpoint * 100);
-    this.fabBottomOffset = `calc(${sheetHeightVh}vh + 16px)`;
+  private updateFabOffset(): void {
+    this.fabBottomOffset = this.selectedPharmacy
+      ? 'calc(100px + 140px)'
+      : 'calc(100px + 24px)';
   }
 }

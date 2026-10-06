@@ -1,5 +1,11 @@
 <div class="onboarding">
   <div class="onboarding__bg" aria-hidden="true">
+    <img
+      class="onboarding__photo"
+      src="assets/images/onboarding-map.jpg"
+      alt=""
+      (error)="$any($event.target).style.display='none'"
+    />
     <div class="map-pattern"></div>
     <div class="onboarding__fade"></div>
   </div>

@@ -12,7 +12,19 @@
   z-index: 0;
 }
 
+.onboarding__photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
 .map-pattern {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
   width: 100%;
   height: 100%;
   background-color: #e5e3df;
@@ -30,6 +42,7 @@
   left: 0;
   right: 0;
   height: 50%;
+  z-index: 2;
   background: linear-gradient(to top, var(--loka-surface-container-lowest), transparent);
 }
 

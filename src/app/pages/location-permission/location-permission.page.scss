@@ -17,11 +17,28 @@
   text-align: center;
 }
 
+.logo-circle {
+  width: 128px;
+  height: 128px;
+  margin: 0 auto 16px;
+  border-radius: 999px;
+  background: var(--loka-surface-container-low);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+
+  img {
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+  }
+}
+
 h1 {
   margin: 8px 0 12px;
-  font-size: 20px;
-  line-height: 28px;
-  font-weight: 600;
+  font-size: 28px;
+  line-height: 36px;
+  font-weight: 700;
   color: var(--loka-on-surface);
 }
 
@@ -35,6 +52,10 @@ p {
 
 .full {
   width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .link-btn {

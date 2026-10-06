@@ -5,6 +5,7 @@ import { Pharmacy } from '../core/models/pharmacy.model';
 import { PharmacyFacade, ListChipFilter } from '../domain/facades/pharmacy.facade';
 import { RoutingFacade } from '../domain/facades/routing.facade';
 import { isOpenNow } from '../domain/utils/pharmacy-details.util';
+import { MapFiltersState } from '../shared/components/filters-sheet/filters-sheet.component';
 
 @Component({
   selector: 'app-tab2',
@@ -17,7 +18,13 @@ export class Tab2Page implements OnInit, OnDestroy {
   loading = false;
   searchQuery = '';
   activeChip: ListChipFilter = 'all';
-  showSearch = true;
+  filtersOpen = false;
+  mapFilters: MapFiltersState = {
+    onCall: false,
+    open24h: false,
+    maxDistanceKm: null,
+    sortBy: 'distance',
+  };
 
   readonly chips: { id: ListChipFilter; label: string }[] = [
     { id: 'all', label: 'Toutes' },
@@ -53,7 +60,6 @@ export class Tab2Page implements OnInit, OnDestroy {
       })
     );
 
-    // S'assurer que les données sont chargées même si l'utilisateur ouvre Liste en premier
     this.pharmacyFacade.refreshPharmacies().subscribe();
   }
 
@@ -68,6 +74,20 @@ export class Tab2Page implements OnInit, OnDestroy {
 
   setChip(chip: ListChipFilter): void {
     this.pharmacyFacade.setListChip(chip);
+  }
+
+  openFilters(): void {
+    this.filtersOpen = true;
+  }
+
+  closeFilters(): void {
+    this.filtersOpen = false;
+  }
+
+  applyFilters(filters: MapFiltersState): void {
+    this.mapFilters = filters;
+    this.pharmacyFacade.setMapFilters(filters);
+    this.filtersOpen = false;
   }
 
   openPharmacy(pharmacy: Pharmacy): void {
@@ -106,9 +126,11 @@ export class Tab2Page implements OnInit, OnDestroy {
   }
 
   addressLine(pharmacy: Pharmacy): string {
-    return [pharmacy.district, pharmacy.address || pharmacy.city].filter(Boolean).join(', ')
-      || pharmacy.city
-      || 'Cameroun';
+    return (
+      [pharmacy.district, pharmacy.address || pharmacy.city].filter(Boolean).join(', ') ||
+      pharmacy.city ||
+      'Cameroun'
+    );
   }
 
   trackById(_: number, pharmacy: Pharmacy): string {
