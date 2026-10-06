@@ -1,8 +1,12 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
+import { firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { CacheService } from '../core/services/cache.service';
 import { LegalModalComponent } from '../shared/components/legal-modal/legal-modal.component';
+
+const ONBOARDING_KEY = 'Lokapharm_onboarding_done_v1';
 
 @Component({
   selector: 'app-tab4',
@@ -25,7 +29,8 @@ export class Tab4Page {
 
   constructor(
     private readonly modalCtrl: ModalController,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly cache: CacheService
   ) {}
 
   toggleDarkTheme(enabled: boolean): void {
@@ -42,15 +47,16 @@ export class Tab4Page {
     await modal.present();
   }
 
-  openVisitHistory(): void {
-    void this.router.navigateByUrl('/visit-history');
-  }
-
   openExternalUrl(url: string): void {
     window.open(url, '_blank', 'noopener,noreferrer');
   }
 
   openSupportEmail(): void {
     window.open(`mailto:${this.supportEmail}?subject=Support%20LokaPharm`, '_system');
+  }
+
+  async signOut(): Promise<void> {
+    await firstValueFrom(this.cache.set(ONBOARDING_KEY, false));
+    await this.router.navigateByUrl('/onboarding', { replaceUrl: true });
   }
 }

@@ -1,11 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ModalController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Pharmacy } from '../core/models/pharmacy.model';
 import { PharmacyFacade, ListChipFilter } from '../domain/facades/pharmacy.facade';
 import { RoutingFacade } from '../domain/facades/routing.facade';
 import { isOpenNow } from '../domain/utils/pharmacy-details.util';
 import { MapFiltersState } from '../shared/components/filters-sheet/filters-sheet.component';
+import { CallConfirmModalComponent } from '../shared/components/call-confirm/call-confirm.modal';
 
 @Component({
   selector: 'app-tab2',
@@ -38,7 +40,8 @@ export class Tab2Page implements OnInit, OnDestroy {
   constructor(
     private readonly pharmacyFacade: PharmacyFacade,
     private readonly routingFacade: RoutingFacade,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly modalCtrl: ModalController
   ) {}
 
   ngOnInit(): void {
@@ -105,13 +108,17 @@ export class Tab2Page implements OnInit, OnDestroy {
     });
   }
 
-  callPharmacy(pharmacy: Pharmacy, event: Event): void {
+  async callPharmacy(pharmacy: Pharmacy, event: Event): Promise<void> {
     event.stopPropagation();
     if (!pharmacy.phone) {
       return;
     }
-    const phone = pharmacy.phone.replace(/\s+/g, '');
-    window.open(`tel:${phone}`, '_system');
+    const modal = await this.modalCtrl.create({
+      component: CallConfirmModalComponent,
+      componentProps: { pharmacyName: pharmacy.name, phone: pharmacy.phone },
+      cssClass: 'call-confirm-modal',
+    });
+    await modal.present();
   }
 
   isOpen(pharmacy: Pharmacy): boolean | undefined {

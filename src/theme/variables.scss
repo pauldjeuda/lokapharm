@@ -50,7 +50,7 @@
 
   --loka-font: 'Inter', 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;
 
-  /* Semantic aliases (legacy glass theme compatibility) */
+  /* Semantic aliases */
   --text-primary: var(--loka-on-surface);
   --text-secondary: var(--loka-on-surface-variant);
   --text-muted: var(--loka-outline);
@@ -58,7 +58,6 @@
   --color-accent-green: var(--loka-on-tertiary-container);
   --color-accent-orange: var(--loka-secondary);
   --color-surface-elevated: var(--loka-surface-container-lowest);
-  --border-glass-card: var(--loka-outline-variant);
 
   --ion-color-primary: #0d2b3e;
   --ion-color-primary-rgb: 13, 43, 62;

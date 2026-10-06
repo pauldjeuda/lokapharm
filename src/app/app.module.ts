@@ -10,17 +10,10 @@ import { IonicStorageModule } from '@ionic/storage-angular';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { OsmApiInterceptor } from './core/interceptors/osm-api.interceptor';
-import { PermissionRationaleComponent } from './shared/components/permission-rationale/permission-rationale.component';
-import { HealthDisclaimerComponent } from './shared/components/health-disclaimer/health-disclaimer.component';
 import { LegalModalComponent } from './shared/components/legal-modal/legal-modal.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    PermissionRationaleComponent,
-    HealthDisclaimerComponent,
-    LegalModalComponent,
-  ],
+  declarations: [AppComponent, LegalModalComponent],
   imports: [
     BrowserModule,
     CommonModule,

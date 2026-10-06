@@ -9,7 +9,7 @@
   <div class="profile-body">
     <section class="user-card loka-card">
       <div class="avatar">L</div>
-      <div>
+      <div class="user-card__text">
         <h1 class="loka-headline-sm">{{ displayName }}</h1>
         <p>{{ displayEmail }}</p>
       </div>
@@ -21,23 +21,32 @@
       <div class="settings-row">
         <div class="settings-row__label">
           <ion-icon name="navigate-outline"></ion-icon>
-          <span>Unité de distance</span>
+          <div>
+            <span>Unité de distance</span>
+            <small>{{ distanceUnit === 'km' ? 'Kilomètres (km)' : 'Miles' }}</small>
+          </div>
         </div>
-        <span class="settings-row__value">{{ distanceUnit === 'km' ? 'Kilomètres' : 'Miles' }}</span>
+        <ion-icon name="chevron-forward" class="chevron"></ion-icon>
       </div>
 
       <div class="settings-row">
         <div class="settings-row__label">
           <ion-icon name="language-outline"></ion-icon>
-          <span>Langue</span>
+          <div>
+            <span>Langue</span>
+            <small>{{ language }}</small>
+          </div>
         </div>
-        <span class="settings-row__value">{{ language }}</span>
+        <ion-icon name="chevron-forward" class="chevron"></ion-icon>
       </div>
 
       <div class="settings-row">
         <div class="settings-row__label">
           <ion-icon name="notifications-outline"></ion-icon>
-          <span>Alertes de garde</span>
+          <div>
+            <span>Alertes de garde</span>
+            <small>Notifier les pharmacies ouvertes à proximité</small>
+          </div>
         </div>
         <ion-toggle [(ngModel)]="onCallAlerts" color="secondary"></ion-toggle>
       </div>
@@ -45,7 +54,10 @@
       <div class="settings-row">
         <div class="settings-row__label">
           <ion-icon name="moon-outline"></ion-icon>
-          <span>Thème sombre</span>
+          <div>
+            <span>Thème sombre</span>
+            <small>{{ darkTheme ? 'Activé' : 'Mode clair' }}</small>
+          </div>
         </div>
         <ion-toggle
           [ngModel]="darkTheme"
@@ -56,22 +68,14 @@
     </section>
 
     <section class="settings-section">
-      <h2 class="section-title">Support & légal</h2>
-
-      <button type="button" class="settings-row clickable" (click)="openVisitHistory()">
-        <div class="settings-row__label">
-          <ion-icon name="time-outline"></ion-icon>
-          <span>Historique des visites</span>
-        </div>
-        <ion-icon name="chevron-forward"></ion-icon>
-      </button>
+      <h2 class="section-title">Support</h2>
 
       <button type="button" class="settings-row clickable" (click)="openSupportEmail()">
         <div class="settings-row__label">
           <ion-icon name="help-circle-outline"></ion-icon>
           <span>Aide & support</span>
         </div>
-        <ion-icon name="chevron-forward"></ion-icon>
+        <ion-icon name="chevron-forward" class="chevron"></ion-icon>
       </button>
 
       <button type="button" class="settings-row clickable" (click)="openLegal('privacy')">
@@ -79,15 +83,7 @@
           <ion-icon name="shield-checkmark-outline"></ion-icon>
           <span>Politique de confidentialité</span>
         </div>
-        <ion-icon name="chevron-forward"></ion-icon>
-      </button>
-
-      <button type="button" class="settings-row clickable" (click)="openLegal('terms')">
-        <div class="settings-row__label">
-          <ion-icon name="document-text-outline"></ion-icon>
-          <span>Conditions d'utilisation</span>
-        </div>
-        <ion-icon name="chevron-forward"></ion-icon>
+        <ion-icon name="chevron-forward" class="chevron"></ion-icon>
       </button>
 
       <button type="button" class="settings-row clickable" (click)="openExternalUrl(websiteUrl)">
@@ -95,15 +91,12 @@
           <ion-icon name="information-circle-outline"></ion-icon>
           <span>À propos de Lokapharm</span>
         </div>
-        <ion-icon name="chevron-forward"></ion-icon>
+        <ion-icon name="chevron-forward" class="chevron"></ion-icon>
       </button>
     </section>
 
-    <p class="version">Lokapharm v{{ appVersion }}</p>
+    <button type="button" class="sign-out" (click)="signOut()">Se déconnecter</button>
 
-    <p class="disclaimer">
-      LokaPharm est un outil d'information et d'orientation. Il ne remplace pas
-      un avis médical, une consultation ou une urgence sanitaire. Ce n’est pas un dispositif médical.
-    </p>
+    <p class="version">Lokapharm v{{ appVersion }}</p>
   </div>
 </ion-content>

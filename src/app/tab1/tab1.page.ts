@@ -6,7 +6,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { ViewDidEnter, ViewWillEnter, ViewWillLeave } from '@ionic/angular';
+import { ViewDidEnter, ViewWillEnter, ViewWillLeave, ModalController } from '@ionic/angular';
 import * as L from 'leaflet';
 import { combineLatest, Subscription } from 'rxjs';
 import { distinctUntilChanged, throttleTime } from 'rxjs/operators';
@@ -23,6 +23,7 @@ import { NavigationFacade } from '../domain/facades/navigation.facade';
 import { PharmacyFacade, PharmacyFilter, DataSourceLabel } from '../domain/facades/pharmacy.facade';
 import { RoutingFacade } from '../domain/facades/routing.facade';
 import { MapFiltersState } from '../shared/components/filters-sheet/filters-sheet.component';
+import { CallConfirmModalComponent } from '../shared/components/call-confirm/call-confirm.modal';
 import { Router } from '@angular/router';
 
 @Component({
@@ -89,7 +90,8 @@ export class Tab1Page
     private readonly haptics: HapticsService,
     private readonly permissionService: PermissionService,
     private readonly mapLayers: MapLayersService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly modalCtrl: ModalController
   ) {}
 
   ngOnInit(): void {
@@ -257,8 +259,17 @@ export class Tab1Page
     this.pharmacyFacade.setSearchQuery(this.searchQuery);
   }
 
-  callPharmacy(phone: string): void {
-    window.open(`tel:${phone.replace(/\s+/g, '')}`, '_self');
+  async callPharmacy(phone: string): Promise<void> {
+    const pharmacy = this.activePharmacy;
+    if (!phone || !pharmacy) {
+      return;
+    }
+    const modal = await this.modalCtrl.create({
+      component: CallConfirmModalComponent,
+      componentProps: { pharmacyName: pharmacy.name, phone },
+      cssClass: 'call-confirm-modal',
+    });
+    await modal.present();
   }
 
   openFilters(): void {

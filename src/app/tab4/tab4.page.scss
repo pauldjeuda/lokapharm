@@ -113,16 +113,49 @@
   gap: 12px;
   font-size: 15px;
   font-weight: 500;
+  min-width: 0;
 
   ion-icon {
     font-size: 22px;
-    color: var(--loka-primary-container);
+    color: var(--loka-outline);
+    flex-shrink: 0;
+  }
+
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  small {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--loka-on-surface-variant);
   }
 }
 
-.settings-row__value {
-  font-size: 14px;
-  color: var(--loka-on-surface-variant);
+.chevron {
+  color: var(--loka-outline-variant);
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.sign-out {
+  width: 100%;
+  padding: 14px;
+  border-radius: 999px;
+  border: 1px solid var(--loka-error);
+  background: var(--loka-surface-container-lowest);
+  color: var(--loka-error);
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: var(--loka-shadow-1);
+  cursor: pointer;
+
+  &:active {
+    background: var(--loka-error-container, #ffdad6);
+  }
 }
 
 .version {
@@ -130,12 +163,4 @@
   margin: 0;
   font-size: 12px;
   color: var(--loka-outline);
-}
-
-.disclaimer {
-  margin: 0;
-  font-size: 13px;
-  line-height: 1.5;
-  color: var(--loka-on-surface-variant);
-  text-align: center;
 }
